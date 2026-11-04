@@ -588,3 +588,41 @@ html[data-hover-reset] [data-window-controls] button:hover {
 .lyrics-edge-fog[data-at-bottom] {
   --lyrics-fog-bottom: 0%;
 }
+
+/* Modded Liner visual surfaces. Performance mode removes expensive effects
+   while preserving the same layout and controls. */
+:root[data-modded-theme="blur"] body,
+:root[data-modded-theme="acrylic"] body,
+:root[data-modded-theme="liquid-glass"] body {
+  background-image: var(--modded-background-image, none);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+:root[data-modded-theme="blur"] body {
+  backdrop-filter: blur(18px);
+}
+
+:root[data-modded-theme="acrylic"] body {
+  background-color: color-mix(in srgb, var(--bg-primary) 82%, transparent);
+  backdrop-filter: blur(28px) saturate(1.15);
+}
+
+:root[data-modded-theme="liquid-glass"] body {
+  background-color: color-mix(in srgb, var(--bg-primary) 68%, transparent);
+  backdrop-filter: blur(34px) saturate(1.3);
+}
+
+:root[data-performance-mode="on"] *,
+:root[data-performance-mode="on"] *::before,
+:root[data-performance-mode="on"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+:root[data-performance-mode="on"] body {
+  backdrop-filter: none !important;
+}

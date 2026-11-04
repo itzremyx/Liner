@@ -4,6 +4,12 @@
 
 **Modern desktop music streaming player with syllable-synced lyrics and reactive dynamic visuals.**
 
+This personal Modded Liner edition adds configurable audio presets, transition
+fades, performance mode, custom visual surfaces, custom branding and optional
+Scoutcode AI recommendations powered by MiniMax M3.1 Flash. API keys are kept
+in local application storage or supplied through `VITE_SCOUTCODE_API_KEY`; no
+credentials belong in this repository.
+
 [![CI](https://img.shields.io/github/actions/workflow/status/tryliner/desktop/ci.yml?branch=main&style=flat-square&label=CI&labelColor=0d0d10&logo=githubactions&logoColor=white)](https://github.com/tryliner/desktop/actions/workflows/ci.yml) [![Release](https://img.shields.io/github/v/release/tryliner/desktop?style=flat-square&label=release&labelColor=0d0d10&color=7a4dff)](https://github.com/tryliner/desktop/releases/latest) [![Downloads](https://img.shields.io/github/downloads/tryliner/desktop/total?style=flat-square&label=downloads&labelColor=0d0d10&color=4d71ff)](https://github.com/tryliner/desktop/releases) [![Platforms](https://img.shields.io/badge/platforms-Windows%20·%20macOS%20·%20Linux-2ec4b6?style=flat-square&labelColor=0d0d10)](https://github.com/tryliner/desktop/releases/latest) [![Discussions](https://img.shields.io/github/discussions/tryliner/desktop?style=flat-square&label=discussions&labelColor=0d0d10&color=3ddc97)](https://github.com/tryliner/desktop/discussions) [![License](https://img.shields.io/badge/license-source--available-534dff?style=flat-square&labelColor=0d0d10)](./LICENSE)
 
 [Preview](#preview) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Building](#building) • [Docs](#docs) • [Contributing](#contributing) • [License](#license)

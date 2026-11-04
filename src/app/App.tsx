@@ -21,6 +21,7 @@ import DeeplinkHandler from "./DeeplinkHandler";
 import EnvironmentWarning from "./EnvironmentWarning";
 import { ConnectionIssueModal } from "@/features/connectivity";
 import { useThemeCustomizationSync } from "@/features/settings";
+import { useModdedThemeSync } from "@/features/modded/hooks/useModdedThemeSync";
 import "./globals.css";
 
 function AppIconSync() {
@@ -35,6 +36,7 @@ function PresenceSync() {
 
 function ThemeSync() {
   useThemeCustomizationSync();
+  useModdedThemeSync();
   return null;
 }
 

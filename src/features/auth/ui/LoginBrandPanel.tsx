@@ -2,6 +2,7 @@ import { MenuSelect } from "@/shared/ui";
 import { useTranslation, LOCALE_OPTIONS } from "@/languages";
 import logo from "@/assets/logo.svg";
 import loginMark from "@/assets/login-mark.svg";
+import { ModdedLogo } from "@/features/modded/ui/ModdedLogo";
 
 export interface LoginBrandPanelProps {
   title: string;
@@ -25,7 +26,8 @@ export function LoginBrandPanel({ title, subtitle }: LoginBrandPanelProps) {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%] bg-linear-to-t from-transparent to-transparent dark:from-black/25" />
 
       <div className="relative flex items-center gap-[10px]">
-        <img
+        <ModdedLogo
+          fallbackSrc={logo}
           src={logo}
           alt="Liner"
           width={45}

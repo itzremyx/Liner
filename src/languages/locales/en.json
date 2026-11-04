@@ -940,6 +940,40 @@
       "scanlines": "Scanlines",
       "vhs": "Chrome"
     },
+    "modded": {
+      "crossfade": {
+        "title": "Custom crossfade",
+        "description": "Fade smoothly between tracks using the low-memory audio pipeline."
+      },
+      "crossfade_duration": {
+        "title": "Crossfade duration",
+        "description": "Set the duration used when a new track starts."
+      },
+      "performance": {
+        "title": "Performance mode",
+        "description": "Reduce decorative effects and background work for lower CPU and RAM usage."
+      },
+      "ai": {
+        "title": "AI recommendations",
+        "description": "Use MiniMax M3.1 Flash through Scoutcode to suggest music from your listening context."
+      },
+      "api_key": {
+        "title": "Scoutcode API key",
+        "description": "Stored locally on this device and never committed to the repository."
+      },
+      "visual_style": {
+        "title": "Modded visual style",
+        "description": "Choose the Blur, Acrylic or Liquid Glass surface treatment."
+      },
+      "background": {
+        "title": "Custom background",
+        "description": "Use an image URL as the app background."
+      },
+      "logo": {
+        "title": "Custom logo",
+        "description": "Use an image URL for the custom logo."
+      }
+    },
     "audio": {
       "pause_on_device_change": {
         "title": "Pause on device change",

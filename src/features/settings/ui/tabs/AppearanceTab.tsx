@@ -5,6 +5,7 @@ import { MenuSelect } from "@/shared/ui";
 import { revealThemeChange } from "@/shared/lib";
 import { SettingBlock, SettingRow, SettingSection } from "../controls";
 import { ThemeCard } from "./ThemeCard";
+import { ModdedAppearanceSettings } from "@/features/modded/ui/ModdedAppearanceSettings";
 
 export function AppearanceTab({ searchQuery }: { searchQuery?: string }) {
   const { t, locale, setLocale } = useTranslation();
@@ -72,6 +73,7 @@ export function AppearanceTab({ searchQuery }: { searchQuery?: string }) {
           </div>
         ) : null}
       </SettingBlock>
+      <ModdedAppearanceSettings searchQuery={searchQuery} />
     </SettingSection>
   );
 }

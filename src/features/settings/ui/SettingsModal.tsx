@@ -82,6 +82,16 @@ const SETTING_ITEMS: { tabId: TabId; titleKey: string; descKey?: string }[] = [
     titleKey: "settings.audio.pause_on_device_change.title",
     descKey: "settings.audio.pause_on_device_change.description",
   },
+  {
+    tabId: "Playback",
+    titleKey: "settings.modded.crossfade.title",
+    descKey: "settings.modded.crossfade.description",
+  },
+  {
+    tabId: "Playback",
+    titleKey: "settings.modded.performance.title",
+    descKey: "settings.modded.performance.description",
+  },
 
   // Shortcuts
   {
@@ -214,6 +224,11 @@ const SETTING_ITEMS: { tabId: TabId; titleKey: string; descKey?: string }[] = [
     tabId: "Appearance",
     titleKey: "settings.theme.title",
     descKey: "settings.theme.description",
+  },
+  {
+    tabId: "Appearance",
+    titleKey: "settings.modded.visual_style.title",
+    descKey: "settings.modded.visual_style.description",
   },
 
   // Storage

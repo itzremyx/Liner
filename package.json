@@ -3,7 +3,7 @@
   "version": "0.2.12",
   "type": "module",
   "private": true,
-  "description": "Liner Music Player",
+  "description": "Modded Liner music player with configurable audio presets, crossfade, performance mode and Scoutcode AI recommendations",
   "author": {
     "name": "hkamori",
     "email": "dev@tryliner.fun"

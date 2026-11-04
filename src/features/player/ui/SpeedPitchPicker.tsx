@@ -8,6 +8,8 @@ import { playerEngine } from "../engine/playerEngine";
 import { RulerControl } from "./speed/RulerControl";
 import { OptionToggle } from "./speed/OptionToggle";
 import { SpeedPresets } from "./speed/SpeedPresets";
+import { MODDED_AUDIO_PRESETS } from "@/features/modded/lib/audioPresets";
+import { PresetPills } from "@/shared/ui/PresetPills";
 
 export interface SpeedPitchPickerProps {
   className?: string;
@@ -52,6 +54,33 @@ export const SpeedPitchPicker = memo(function SpeedPitchPicker({
       <SpeedPresets
         rate={playbackRate}
         onSelect={(rate) => playerEngine.setPlaybackRate(rate)}
+      />
+      <PresetPills
+        options={MODDED_AUDIO_PRESETS.map((preset) => ({
+          value: preset.id,
+          label: preset.label,
+          title: preset.label,
+        }))}
+        value={
+          MODDED_AUDIO_PRESETS.find(
+            (preset) =>
+              Math.abs(preset.rate - playbackRate) < 0.02 &&
+              Math.abs(preset.pitchSemitones - pitchSemitones) < 0.25 &&
+              preset.reverb === isReverbEnabled,
+          )?.id ?? "normal"
+        }
+        onChange={(id) => {
+          const preset = MODDED_AUDIO_PRESETS.find((item) => item.id === id);
+          if (!preset) return;
+          playerEngine.setPlaybackRate(preset.rate);
+          playerEngine.setPitchSemitones(preset.pitchSemitones);
+          playerEngine.setReverbLevel(preset.reverbLevel);
+          playerEngine.setIsReverbEnabled(preset.reverb);
+        }}
+        size="sm"
+        fill={false}
+        className="max-w-full overflow-x-auto"
+        ariaLabel="Modded audio presets"
       />
       <RulerControl
         label={t("player.speed")}

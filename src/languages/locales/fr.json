@@ -803,6 +803,40 @@
       "scanlines": "Lignes de balayage",
       "vhs": "Chrome"
     },
+    "modded": {
+      "crossfade": {
+        "title": "Fondu enchaîné personnalisé",
+        "description": "Adoucit la transition entre les titres avec le pipeline audio léger."
+      },
+      "crossfade_duration": {
+        "title": "Durée du fondu",
+        "description": "Définit la durée utilisée au démarrage d'un nouveau titre."
+      },
+      "performance": {
+        "title": "Mode performance",
+        "description": "Réduit les effets décoratifs et le travail en arrière-plan pour limiter le CPU et la RAM."
+      },
+      "ai": {
+        "title": "Recommandations IA",
+        "description": "Utilise MiniMax M3.1 Flash via Scoutcode selon votre écoute."
+      },
+      "api_key": {
+        "title": "Clé API Scoutcode",
+        "description": "Stockée localement sur cet appareil et jamais publiée dans le dépôt."
+      },
+      "visual_style": {
+        "title": "Style visuel moddé",
+        "description": "Choisissez le rendu Blur, Acrylic ou Liquid Glass."
+      },
+      "background": {
+        "title": "Arrière-plan personnalisé",
+        "description": "Utilisez l'URL d'une image comme arrière-plan."
+      },
+      "logo": {
+        "title": "Logo personnalisé",
+        "description": "Utilisez l'URL d'une image pour le logo."
+      }
+    },
     "audio": {
       "pause_on_device_change": {
         "title": "Pause au changement de périphérique",

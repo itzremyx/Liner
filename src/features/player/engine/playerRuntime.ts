@@ -9,6 +9,7 @@ import { markLinerStreamFailed } from "@/shared/media/liner/linerPlayback";
 import { isLocalTrackId } from "@/shared/media/local";
 import { isSavedTrack } from "@/shared/media/saved";
 import { pitchShifter } from "./pitchShifter";
+import { getCrossfadeDurationMs } from "@/features/modded/store/moddedStore";
 import { FLAT_EQ, isEqActive } from "./equalizer";
 import { resolvePlaybackStream, type PlaybackStream } from "./streamResolver";
 import { logNowPlaying } from "./nowPlayingLog";
@@ -863,7 +864,10 @@ export class PlayerRuntime {
 
         if (epoch === this.loadEpoch) {
           usePlayerStore.getState().setStatus("playing");
-          this.fadeVolume(usePlayerStore.getState().volume, 180);
+          this.fadeVolume(
+            usePlayerStore.getState().volume,
+            getCrossfadeDurationMs(),
+          );
         }
         logNowPlaying(track, true, audioStartLatencyMs);
         return;
@@ -935,7 +939,10 @@ export class PlayerRuntime {
 
       if (epoch === this.loadEpoch) {
         usePlayerStore.getState().setStatus("playing");
-        this.fadeVolume(usePlayerStore.getState().volume, 180);
+        this.fadeVolume(
+          usePlayerStore.getState().volume,
+          getCrossfadeDurationMs(),
+        );
         this.cacheAudioInBackground(track, stream, bgCacheController.signal);
       }
       logNowPlaying(track, false, audioStartLatencyMs);
@@ -1068,7 +1075,7 @@ export class PlayerRuntime {
       playPromise
         .then(() => {
           if (epoch !== this.loadEpoch) return;
-          this.fadeVolume(targetVolume, 180);
+          this.fadeVolume(targetVolume, getCrossfadeDurationMs());
         })
         .catch((error) => {
           if (epoch !== this.loadEpoch) return;
@@ -1098,7 +1105,7 @@ export class PlayerRuntime {
           if (epoch === this.loadEpoch) this.activePlayPromise = null;
         });
     } else {
-      this.fadeVolume(targetVolume, 180);
+      this.fadeVolume(targetVolume, getCrossfadeDurationMs());
     }
   }
 

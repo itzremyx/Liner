@@ -5,6 +5,7 @@ import logo from "@/assets/logo.svg";
 import { AboutTabLinks } from "./AboutTabLinks";
 import { AboutBackdrop } from "./AboutBackdrop";
 import { useAboutAppVersion } from "./useAboutAppVersion";
+import { ModdedLogo } from "@/features/modded/ui/ModdedLogo";
 
 export function AboutTab({ searchQuery }: { searchQuery?: string }) {
   const { t } = useTranslation();
@@ -39,7 +40,8 @@ export function AboutTab({ searchQuery }: { searchQuery?: string }) {
       <AboutBackdrop />
       <div className="relative flex items-start justify-between">
         <div className="flex flex-col items-start gap-[8px]">
-          <img
+          <ModdedLogo
+            fallbackSrc={logo}
             src={logo}
             alt=""
             width={45}
