@@ -1,6 +1,6 @@
 {
   "name": "@liner/client",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "type": "module",
   "private": true,
   "description": "Modded Liner music player with configurable audio presets, crossfade, performance mode and Scoutcode AI recommendations",
