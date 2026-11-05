@@ -61,7 +61,7 @@ jobs:
           ls -lh android/app/build/outputs/apk/debug/
       
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: modded-liner-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
