@@ -51,6 +51,8 @@
       "home": "Accueil",
       "search": "Rechercher",
       "library": "Bibliothèque",
+      "modded": "Moddé",
+      "statistics": "Statistiques",
       "settings": "Paramètres"
     },
     "loading": "Chargement",
@@ -272,6 +274,9 @@
       "import_failed_other": "Impossible d'ajouter {count} fichiers",
       "unsupported": "Ces fichiers ne sont pas des formats audio pris en charge",
       "remove": "Supprimer de l'appareil",
+      "clean_duplicates": "Supprimer les doublons",
+      "duplicates_removed": "{count} doublons supprimés",
+      "no_duplicates": "Aucun doublon trouvé",
       "remove_all": "Tout supprimer",
       "remove_all_title": "Supprimer toute la musique locale ?",
       "remove_all_desc": "{tracks} ({size}) seront supprimés de Liner, avec leurs pochettes. Vos fichiers d'origine restent à leur place.",
@@ -544,7 +549,16 @@
     "sec": "s",
     "empty_title": "Cette playlist est vide",
     "empty_subtitle": "Recherchez des titres à ajouter",
-    "likes_empty": "Aucun titre aimé pour l'instant"
+    "likes_empty": "Aucun titre aimé pour l'instant",
+    "cover": {
+      "action": "Changer la cover",
+      "title": "Cover de la playlist",
+      "description": "Collez l'URL d'une image pour remplacer la cover générée. Laissez vide pour restaurer celle par défaut.",
+      "url_label": "URL de l'image",
+      "empty_preview": "Aucune cover personnalisée",
+      "saved": "Cover de la playlist mise à jour",
+      "cleared": "Cover personnalisée supprimée"
+    }
   },
   "search": {
     "placeholder": "Rechercher des titres, artistes, albums...",
@@ -581,6 +595,8 @@
       "account": "Compte",
       "about": "À propos",
       "playback": "Lecture",
+      "audio": "Audio",
+      "ai": "IA",
       "shortcuts": "Raccourcis",
       "overlay": "Overlay",
       "privacy": "Confidentialité",
@@ -589,6 +605,9 @@
     },
     "playback": {
       "description": "Comportement de la file d'attente, actions au clic et sortie audio."
+    },
+    "ai": {
+      "description": "Recommandations, Scoutcode et paroles traduites."
     },
     "shortcuts": {
       "description": "Personnalisez les raccourcis clavier globaux et ceux du lecteur.",
@@ -834,10 +853,97 @@
       },
       "api_key": {
         "title": "Clé API Scoutcode",
-        "description": "Stockée localement sur cet appareil. Elle n'est jamais committée dans le dépôt."
+        "description": "Stockée localement sur cet appareil. Elle n'est jamais committée dans le dépôt.",
+        "test": "Tester la clé",
+        "testing": "Test en cours…",
+        "success": "Clé valide",
+        "error": "Clé invalide"
+      },
+      "audio_quality": {
+        "title": "Qualité audio",
+        "description": "Eco consomme moins de données, Lossless préserve l'audio d'origine."
+      },
+      "automix": {
+        "title": "Automix",
+        "description": "Enchaîne automatiquement les titres compatibles avec des transitions fluides."
+      },
+      "automix_duration": {
+        "title": "Transition Automix",
+        "description": "Durée de la transition automatique entre les titres mixés."
+      },
+      "hover_preview": {
+        "title": "Aperçu au survol",
+        "description": "Joue un court extrait quand vous survolez un titre à la souris."
+      },
+      "metronome": {
+        "title": "Métronome",
+        "description": "Garde un clic en rythme avec le morceau en cours."
+      },
+      "metronome_bpm": {
+        "title": "Tempo du métronome",
+        "description": "Battements par minute du métronome."
+      },
+      "vocal_mode": {
+        "title": "Isolation vocale",
+        "description": "Traitement expérimental du canal central.",
+        "off": "Désactivé",
+        "instrumental": "Instrumental",
+        "vocals": "Voix"
+      },
+      "gpu": {
+        "title": "Accélération GPU",
+        "description": "Utilise l'accélération matérielle pour les effets visuels. Nécessite un redémarrage."
+      },
+      "gpu_restart": {
+        "title": "Redémarrage requis",
+        "description": "L'accélération GPU sera appliquée au prochain démarrage de Liner.",
+        "button": "Redémarrer Liner"
+      },
+      "lyrics_translation": {
+        "title": "Traduction des paroles",
+        "description": "Traduit les paroles synchronisées dans la langue de l'application."
+      },
+      "personalized_home": {
+        "title": "Accueil personnalisé",
+        "description": "Affiche une section « Pour toi » basée sur l'écoute récente sur cet appareil."
+      },
+      "longer_daily_mixes": {
+        "title": "Daily Mixes plus longs",
+        "description": "Demande des Daily Mixes contenant plus de titres."
+      },
+      "visual_style": {
+        "title": "Style visuel",
+        "description": "Choisissez l'effet de verre utilisé dans l'interface."
+      },
+      "background": {
+        "title": "Fond personnalisé",
+        "description": "URL de l'image utilisée comme fond de l'application."
+      },
+      "logo": {
+        "title": "Logo personnalisé",
+        "description": "URL de l'image utilisée comme logo de la barre latérale."
+      },
+      "lyrics_font": {
+        "title": "Police des paroles",
+        "description": "Police utilisée pour les paroles synchronisées."
+      },
+      "animations": {
+        "title": "Animations supplémentaires",
+        "description": "Ajoute du mouvement décoratif à l'interface."
+      },
+      "christmas": {
+        "title": "Thème Noël",
+        "description": "Affiche automatiquement les décorations saisonnières."
+      },
+      "pinned_items": {
+        "title": "Éléments épinglés",
+        "description": "Playlists et artistes affichés sous la navigation latérale.",
+        "empty": "Aucun élément épinglé. Épinglez une playlist ou un artiste pour le voir ici.",
+        "remove": "Désépingler"
       }
     },
     "audio": {
+      "description": "Qualité de lecture, transitions, normalisation et traitement audio.",
       "pause_on_device_change": {
         "title": "Pause au changement de périphérique",
         "description": "Met automatiquement la lecture en pause quand la sortie audio change."
@@ -1175,5 +1281,66 @@
     "copy_code": "Copier le code",
     "connected": "YouTube connecté",
     "qr_label": "Code QR de connexion"
+  },
+  "modded": {
+    "hub": {
+      "eyebrow": "Liner moddé",
+      "title": "Centre de contrôle",
+      "description": "Chaque fonctionnalité moddée est désormais à sa place. Accédez aux statistiques, aux recommandations ou au bon onglet des paramètres.",
+      "statistics": {
+        "title": "Statistiques",
+        "description": "Minutes écoutées, titres et artistes favoris, historique récent."
+      },
+      "home": {
+        "title": "Accueil personnalisé",
+        "description": "Recommandations IA et section Pour toi."
+      },
+      "local": {
+        "title": "Bibliothèque locale",
+        "description": "Fichiers importés et nettoyage des doublons."
+      },
+      "ai": {
+        "title": "Paramètres IA",
+        "description": "Clé Scoutcode, recommandations, traduction et Daily Mixes."
+      },
+      "audio": {
+        "title": "Paramètres audio",
+        "description": "Qualité, fondu, automix, métronome et accélération GPU."
+      },
+      "appearance": {
+        "title": "Paramètres d'apparence",
+        "description": "Style de verre, fonds, polices, animations et éléments épinglés."
+      },
+      "settings_title": "Paramètres réorganisés",
+      "settings_description": "Audio et IA ont désormais leurs propres onglets, et les options d'apparence sont regroupées dans Apparence.",
+      "open_statistics": "Ouvrir les statistiques complètes",
+      "pinned_count": "éléments épinglés"
+    },
+    "stats": {
+      "eyebrow": "Liner Wrapped",
+      "title": "Statistiques d'écoute",
+      "description": "Tout ce que vous avez écouté sur cet appareil, résumé localement. Rien n'est envoyé.",
+      "back": "Centre de contrôle",
+      "clear": "Effacer les statistiques",
+      "minutes": "Minutes écoutées",
+      "unique_tracks": "Titres uniques",
+      "unique_artists": "Artistes uniques",
+      "events": "Écoutes enregistrées",
+      "top_tracks": "Titres favoris",
+      "top_artists": "Artistes favoris",
+      "recent": "Écoutes récentes",
+      "empty": {
+        "title": "Aucun historique pour l'instant",
+        "description": "Écoutez quelques titres pour générer votre Wrapped personnel."
+      }
+    },
+    "recommendations": {
+      "title": "Recommandé pour vous",
+      "description": "Suggéré par Scoutcode à partir de votre écoute récente.",
+      "refresh": "Actualiser les recommandations",
+      "missing_key": "Ajoutez votre clé API Scoutcode dans Paramètres → IA pour activer les recommandations.",
+      "error": "Impossible de charger les recommandations. Vérifiez votre clé et votre connexion.",
+      "empty": "Aucune recommandation pour l'instant."
+    }
   }
 }

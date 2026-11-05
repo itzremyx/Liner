@@ -6,6 +6,7 @@ import { usePopularTracksAllTime } from "../hooks/usePopularTracks";
 import { useListeningNow } from "../hooks/useListeningNow";
 import ListeningNowSection from "./ListeningNowSection";
 import { useRecentlyPlayed } from "../hooks/useRecentlyPlayed";
+import { HomeRecommendationsSection } from "./HomeRecommendationsSection";
 import { useDailyMixes } from "../hooks/useDailyMixes";
 import { useMostSaved, usePopularAlbums } from "../hooks/useExploreCollections";
 import { useTranslation } from "@/languages";
@@ -38,7 +39,9 @@ function HomeFeed({ onRetry }: { onRetry: () => void }) {
   const { items: popularAlbums, isLoading: albumsLoading } = usePopularAlbums();
   const { items: mostSaved, isLoading: savedLoading } = useMostSaved();
   const { data: dailyMixes, isLoading: mixesLoading } = useDailyMixes();
-  const personalizedHome = useModdedSettingsStore((state) => state.personalizedHome);
+  const personalizedHome = useModdedSettingsStore(
+    (state) => state.personalizedHome,
+  );
   const analyticsEvents = useModdedAnalyticsStore((state) => state.events);
   const forYou = analyticsEvents.slice(0, 12).map((event) => ({
     type: "track" as const,
@@ -149,6 +152,12 @@ function HomeFeed({ onRetry }: { onRetry: () => void }) {
                 headingMarginTop={hasMixesSlot ? "mt-[22px]" : "mt-0"}
               />
             )}
+
+            <HomeRecommendationsSection
+              marginTop={
+                hasMixesSlot || popularAlbums.length > 0 ? "mt-[22px]" : "mt-0"
+              }
+            />
 
             {listeningNow.length > 0 && (
               <ListeningNowSection

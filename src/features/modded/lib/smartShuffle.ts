@@ -75,59 +75,79 @@ export async function aiSmartShuffle(tracks: Track[]): Promise<Track[]> {
   }
 
   try {
-    const trackList = tracks
-      .slice(0, 50) // Limit to avoid huge prompts
-      .map(
-        (t, i) =>
-          `${i + 1}. "${t.title}" by ${t.artists} (${Math.round((t.durationMs || 0) / 1000)}s)`,
-      )
-      .join("\n");
+    // Chunk the playlist so the prompt stays small; reassemble the AI orders in series.
+    const ordered: Track[] = [];
+    let failed = false;
 
-    const response = await fetch("https://scoutcode.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: "MiniMax-M3.1-Flash",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a music DJ expert. Create smooth, engaging playlists by ordering tracks intelligently.",
-          },
-          {
-            role: "user",
-            content: `I have these tracks. Create a smart shuffle order that flows well - consider artist variety, energy transitions, and tempo. Return ONLY a comma-separated list of track numbers (e.g., "3,7,1,5,2,8,4,6") with no other text:\n\n${trackList}`,
-          },
-        ],
-        temperature: 0.7,
-        max_tokens: 300,
-      }),
-    });
+    for (let start = 0; start < tracks.length; start += 50) {
+      const chunk = tracks.slice(start, start + 50);
+      const trackList = chunk
+        .map(
+          (t, i) =>
+            `${i + 1}. "${t.title}" by ${t.artists} (${Math.round(
+              (t.durationMs || 0) / 1000,
+            )}s)`,
+        )
+        .join("\n");
 
-    if (!response.ok) {
-      throw new Error(`AI shuffle failed: ${response.status}`);
+      const response = await fetch(
+        "https://scoutcode.dev/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "MiniMax-M3.1-Flash",
+            messages: [
+              {
+                role: "system",
+                content:
+                  "You are a music DJ expert. Create smooth, engaging playlists by ordering tracks intelligently.",
+              },
+              {
+                role: "user",
+                content: `I have ${chunk.length} tracks. Create a smart shuffle order that flows well - consider artist variety, energy transitions, and tempo, and end on a satisfying note. Return ONLY a comma-separated list of track numbers 1-${chunk.length} covering each number exactly once (e.g., "3,7,1,5,2,8,4,6") with no other text:\n\n${trackList}`,
+              },
+            ],
+            temperature: 0.7,
+            max_tokens: 512,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`AI shuffle failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const orderText = data.choices?.[0]?.message?.content?.trim() || "";
+      const order = orderText
+        .split(/[,\s]+/)
+        .map((n: string) => parseInt(n.trim(), 10) - 1)
+        .filter((n: number) => n >= 0 && n < chunk.length);
+
+      // A valid chunk order covers each position exactly once
+      if (
+        order.length !== chunk.length ||
+        new Set(order).size !== order.length
+      ) {
+        failed = true;
+        break;
+      }
+
+      for (const position of order) {
+        ordered.push(chunk[position]);
+      }
     }
 
-    const data = await response.json();
-    const orderText = data.choices?.[0]?.message?.content?.trim() || "";
-    const order = orderText
-      .split(/[,\s]+/)
-      .map((n: string) => parseInt(n.trim(), 10) - 1)
-      .filter((n: number) => n >= 0 && n < tracks.length);
-
-    // If AI returns valid order, use it
-    if (
-      order.length === tracks.length &&
-      new Set(order).size === order.length
-    ) {
-      return order.map((i: number) => tracks[i]);
+    // Fallback to heuristic if any chunk produced an invalid order
+    if (failed || ordered.length !== tracks.length) {
+      return heuristicSmartShuffle(tracks);
     }
 
-    // Fallback to heuristic
-    return heuristicSmartShuffle(tracks);
+    return ordered;
   } catch (error) {
     console.warn("AI smart shuffle failed, using heuristic:", error);
     return heuristicSmartShuffle(tracks);

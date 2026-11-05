@@ -15,7 +15,7 @@ import type {
 import { useTranslation } from "@/languages";
 import { useModdedSettingsStore } from "@/features/modded/store/moddedStore";
 import { useModalStore } from "../store/modalStore";
-import { LuTrash2 } from "react-icons/lu";
+import { LuPin, LuPinOff, LuTrash2 } from "react-icons/lu";
 import { More2Fill, PlaylistFill, AddLine, Search3Fill } from "@mingcute/react";
 
 interface LibraryGridProps {
@@ -98,6 +98,9 @@ export function LibraryGridSkeleton({
 
 function useItemMenuItems(item: LibraryItemViewModel): DropdownMenuItem[] {
   const { t } = useTranslation();
+  const pinnedItems = useModdedSettingsStore((state) => state.pinnedItems);
+  const pinItem = useModdedSettingsStore((state) => state.pinItem);
+  const unpinItem = useModdedSettingsStore((state) => state.unpinItem);
   return useMemo(() => {
     if (item.source) return [];
     const entityType =
@@ -106,7 +109,36 @@ function useItemMenuItems(item: LibraryItemViewModel): DropdownMenuItem[] {
         : item.kind === "album"
           ? "album"
           : "playlist";
+    const pinType =
+      item.kind === "playlist" || item.kind === "artist" ? item.kind : null;
+    const isPinned = pinType
+      ? pinnedItems.some(
+          (pinned) => pinned.id === item.id && pinned.type === pinType,
+        )
+      : false;
     return [
+      ...(pinType
+        ? [
+            {
+              id: isPinned ? "unpin" : "pin",
+              label: isPinned ? "Unpin from sidebar" : "Pin to sidebar",
+              icon: isPinned ? <LuPinOff size={15} /> : <LuPin size={15} />,
+              onClick: () => {
+                if (isPinned) {
+                  unpinItem(item.id);
+                } else {
+                  pinItem({
+                    id: item.id,
+                    type: pinType,
+                    title: item.title,
+                    imageUrl: item.imageUrl,
+                    href: item.href,
+                  });
+                }
+              },
+            },
+          ]
+        : []),
       {
         id: "remove-from-library",
         label: t("common.remove_from_library"),
@@ -137,6 +169,9 @@ function useItemMenuItems(item: LibraryItemViewModel): DropdownMenuItem[] {
     item.isOwned,
     item.source,
     item.href,
+    pinnedItems,
+    pinItem,
+    unpinItem,
     t,
   ]);
 }

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { AddLine, MusicLine, PlayFill } from "@mingcute/react";
-import { LuShuffle, LuTrash2 } from "react-icons/lu";
+import { LuCopyX, LuShuffle, LuTrash2 } from "react-icons/lu";
 import { useTranslation } from "@/languages";
 import {
   EntityHero,
@@ -24,6 +24,8 @@ interface LocalTracksHeroProps {
   onShuffle: () => void;
   onAddFiles: () => void;
   onRemoveAll: () => void;
+  onCleanDuplicates: () => void;
+  cleaning?: boolean;
 }
 
 export default function LocalTracksHero({
@@ -35,6 +37,8 @@ export default function LocalTracksHero({
   onShuffle,
   onAddFiles,
   onRemoveAll,
+  onCleanDuplicates,
+  cleaning = false,
 }: LocalTracksHeroProps) {
   const { t } = useTranslation();
   const empty = tracks.length === 0;
@@ -89,6 +93,21 @@ export default function LocalTracksHero({
         <>
           {search}
           {sort}
+          {!empty && (
+            <Button
+              variant="secondary"
+              onClick={onCleanDuplicates}
+              disabled={importing || cleaning}
+              className={`${HERO_BUTTON_CLASS} ${HERO_GLASS_BUTTON_CLASS} !w-[52px] !p-0 text-text-primary`}
+              title={t("library.local.clean_duplicates")}
+              aria-label={t("library.local.clean_duplicates")}
+            >
+              <LuCopyX
+                size={17}
+                className={cleaning ? "animate-pulse" : undefined}
+              />
+            </Button>
+          )}
           {!empty && (
             <Button
               variant="secondary"

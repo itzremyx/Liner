@@ -28,7 +28,8 @@ export {
   getWrappedStats,
   type ListeningEvent,
 } from "./store/moddedAnalyticsStore";
-export { ModdedPlaybackSettings } from "./ui/ModdedPlaybackSettings";
+export { ModdedAudioSettings } from "./ui/ModdedAudioSettings";
+export { ModdedAiSettings } from "./ui/ModdedAiSettings";
 export { ModdedAppearanceSettings } from "./ui/ModdedAppearanceSettings";
 export { ModdedLogo } from "./ui/ModdedLogo";
 export { ModdedMetronomeSync } from "./ui/ModdedMetronomeSync";

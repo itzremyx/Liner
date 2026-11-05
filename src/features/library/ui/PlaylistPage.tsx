@@ -42,12 +42,21 @@ import {
   DownloadLine,
 } from "@mingcute/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { LuPencil, LuTrash2, LuText, LuShuffle } from "react-icons/lu";
+import {
+  LuImagePlus,
+  LuPencil,
+  LuPin,
+  LuPinOff,
+  LuTrash2,
+  LuText,
+  LuShuffle,
+} from "react-icons/lu";
 import { buildShareUrl } from "@/shared/utils/share";
 import Button from "@/shared/ui/Button";
 import DropdownMenu from "@/shared/ui/DropdownMenu";
 import SongCardWithMenu from "@/features/player/ui/SongCardWithMenu";
 import CoverImage from "@/features/covers/ui/CoverImage";
+import PlaylistCoverDialog from "./PlaylistCoverDialog";
 import { useModalStore } from "../store/modalStore";
 import {
   usePlaylist,
@@ -204,6 +213,7 @@ function LibraryPlaylistContent() {
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [isEditingCover, setIsEditingCover] = useState(false);
   const reorderTracks = useReorderPlaylistTracks();
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
@@ -227,8 +237,16 @@ function LibraryPlaylistContent() {
       statusOf(playlistError) !== 404;
 
   const isLoading = isLikesMode ? likesLoading : playlistLoading;
-  const customCoverUrl = useModdedSettingsStore(
-    (state) => (decodedId ? state.playlistCovers[decodedId] : undefined),
+  const customCoverUrl = useModdedSettingsStore((state) =>
+    decodedId ? state.playlistCovers[decodedId] : undefined,
+  );
+  const pinnedItems = useModdedSettingsStore((state) => state.pinnedItems);
+  const pinItem = useModdedSettingsStore((state) => state.pinItem);
+  const unpinItem = useModdedSettingsStore((state) => state.unpinItem);
+
+  const isPinned = useMemo(
+    () => (decodedId ? pinnedItems.some((p) => p.id === decodedId) : false),
+    [pinnedItems, decodedId],
   );
 
   const viewData = (() => {
@@ -255,11 +273,10 @@ function LibraryPlaylistContent() {
       bio,
       countLabel: t("common.tracks", { count: playlistDetail.trackCount }),
       coverUrl: customCoverUrl || playlistDetail.coverUrl || "",
-      coverUrls:
-        customCoverUrl
-          ? [customCoverUrl]
-          : playlistDetail.coverUrls ??
-            (playlistDetail.coverUrl ? [playlistDetail.coverUrl] : []),
+      coverUrls: customCoverUrl
+        ? [customCoverUrl]
+        : (playlistDetail.coverUrls ??
+          (playlistDetail.coverUrl ? [playlistDetail.coverUrl] : [])),
       tracks: playlistDetail.tracks,
       durationMs: playlistDetail.durationMs,
       revision: playlistDetail.revision,
@@ -280,8 +297,9 @@ function LibraryPlaylistContent() {
       ? {
           title: summary.title || t("playlist.untitled_playlist"),
           subtitle: summary.description?.trim() || undefined,
-          coverUrls:
-            summary.coverUrls?.length > 0
+          coverUrls: customCoverUrl
+            ? [customCoverUrl]
+            : summary.coverUrls?.length > 0
               ? summary.coverUrls
               : summary.coverUrl
                 ? [summary.coverUrl]
@@ -387,7 +405,14 @@ function LibraryPlaylistContent() {
     if (!sortedTracks.length || !viewData) return;
     const context = decodedId ? `playlist:${decodedId}` : viewData.title;
     const ordered = await smartShuffle(sortedTracks, true);
-    await playerEngine.playShuffled(ordered, context, viewData.coverUrl);
+    await playerEngine.playTrack(
+      ordered[0],
+      ordered,
+      context,
+      viewData.coverUrl,
+      0,
+      true,
+    );
     toast("Mix IA préparé", "checkmark");
   }, [decodedId, sortedTracks, toast, viewData]);
 
@@ -877,6 +902,36 @@ function LibraryPlaylistContent() {
                             </Button>
                           }
                           items={[
+                            ...(decodedId
+                              ? [
+                                  {
+                                    id: isPinned ? "unpin" : "pin",
+                                    icon: isPinned ? (
+                                      <LuPinOff size={15} />
+                                    ) : (
+                                      <LuPin size={15} />
+                                    ),
+                                    label: isPinned
+                                      ? "Unpin from sidebar"
+                                      : "Pin to sidebar",
+                                    onClick: () => {
+                                      if (!decodedId) return;
+                                      if (isPinned) {
+                                        unpinItem(decodedId);
+                                      } else {
+                                        pinItem({
+                                          id: decodedId,
+                                          type: "playlist" as const,
+                                          title: viewData.title,
+                                          imageUrl:
+                                            viewData.coverUrl || undefined,
+                                          href: `/library/playlist?id=${encodeURIComponent(decodedId)}`,
+                                        });
+                                      }
+                                    },
+                                  },
+                                ]
+                              : []),
                             {
                               id: "rename",
                               icon: <LuPencil size={15} />,
@@ -888,6 +943,12 @@ function LibraryPlaylistContent() {
                               icon: <LuText size={15} />,
                               label: t("common.edit_description"),
                               onClick: () => setIsEditingDescription(true),
+                            },
+                            {
+                              id: "edit-cover",
+                              icon: <LuImagePlus size={15} />,
+                              label: t("playlist.cover.action"),
+                              onClick: () => setIsEditingCover(true),
                             },
                             {
                               id: "share",
@@ -1103,6 +1164,14 @@ function LibraryPlaylistContent() {
           </div>
         )}
       </div>
+      {!isLikesMode && (
+        <PlaylistCoverDialog
+          open={isEditingCover}
+          playlistId={decodedId}
+          currentCoverUrl={customCoverUrl}
+          onClose={() => setIsEditingCover(false)}
+        />
+      )}
     </div>
   );
 }

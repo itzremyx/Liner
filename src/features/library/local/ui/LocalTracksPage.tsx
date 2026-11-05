@@ -7,9 +7,10 @@ import {
 } from "../../ui/TrackSearch";
 import { TrackSortMenu, useTrackSort } from "../../ui/TrackSort";
 import { useTranslation } from "@/languages";
-import { HERO_GLASS_CLASS, ListPanel } from "@/shared/ui";
+import { HERO_GLASS_CLASS, ListPanel, showToast } from "@/shared/ui";
 import { useLocalImport } from "../hooks/useLocalImport";
 import { useLocalTracks } from "../hooks/useLocalTracks";
+import { useLocalLibraryStore } from "../store/localLibraryStore";
 import LocalTrackList from "./LocalTrackList";
 import LocalTracksEmpty from "./LocalTracksEmpty";
 import LocalTracksHero from "./LocalTracksHero";
@@ -22,7 +23,26 @@ export default function LocalTracksPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { tracks, isLoading } = useLocalTracks();
   const { chooseFiles, importing } = useLocalImport();
+  const removeDuplicates = useLocalLibraryStore(
+    (state) => state.removeDuplicates,
+  );
   const [removeAllOpen, setRemoveAllOpen] = useState(false);
+  const [cleaning, setCleaning] = useState(false);
+
+  const cleanDuplicates = useCallback(async () => {
+    setCleaning(true);
+    try {
+      const removed = await removeDuplicates();
+      showToast(
+        removed > 0
+          ? t("library.local.duplicates_removed", { count: removed })
+          : t("library.local.no_duplicates"),
+        "success",
+      );
+    } finally {
+      setCleaning(false);
+    }
+  }, [removeDuplicates, t]);
 
   const sort = useTrackSort(tracks, PAGE_KEY);
   const search = useTrackSearch(sort.sorted, PAGE_KEY);
@@ -69,6 +89,8 @@ export default function LocalTracksPage() {
             onShuffle={shuffle}
             onAddFiles={() => void chooseFiles()}
             onRemoveAll={() => setRemoveAllOpen(true)}
+            onCleanDuplicates={() => void cleanDuplicates()}
+            cleaning={cleaning}
             search={
               <TrackSearchField
                 search={search}

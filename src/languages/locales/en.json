@@ -51,6 +51,8 @@
       "home": "Home",
       "search": "Search",
       "library": "Library",
+      "modded": "Modded",
+      "statistics": "Statistics",
       "settings": "Settings"
     },
     "minimize": "Minimize",
@@ -264,6 +266,9 @@
       "import_failed_other": "Couldn't add {count} files",
       "unsupported": "These files aren't supported audio",
       "remove": "Remove from device",
+      "clean_duplicates": "Remove duplicate tracks",
+      "duplicates_removed": "Removed {count} duplicate tracks",
+      "no_duplicates": "No duplicates found",
       "remove_all": "Remove all imported files",
       "remove_all_title": "Remove all local music?",
       "remove_all_desc": "{tracks} ({size}) will be removed from Liner, together with their covers. Your original files stay where they are.",
@@ -557,7 +562,16 @@
     "likes_empty": "No liked songs yet",
     "likes_load_failed": "Couldn't load your liked songs",
     "load_failed": "Couldn't load this playlist",
-    "load_failed_desc": "Check your connection and try again."
+    "load_failed_desc": "Check your connection and try again.",
+    "cover": {
+      "action": "Change cover",
+      "title": "Playlist cover",
+      "description": "Paste an image URL to override the generated playlist cover. Leave empty to restore the default.",
+      "url_label": "Cover image URL",
+      "empty_preview": "No custom cover",
+      "saved": "Playlist cover updated",
+      "cleared": "Custom cover removed"
+    }
   },
   "search": {
     "placeholder": "Search tracks, artists, albums...",
@@ -594,6 +608,8 @@
       "account": "Account",
       "about": "About",
       "playback": "Playback",
+      "audio": "Audio",
+      "ai": "AI",
       "shortcuts": "Shortcuts",
       "overlay": "Overlay",
       "discord": "Discord RPC",
@@ -971,10 +987,100 @@
       },
       "api_key": {
         "title": "Scoutcode API key",
-        "description": "Stored locally on this device. It is never committed to the repository."
+        "description": "Stored locally on this device. It is never committed to the repository.",
+        "test": "Test key",
+        "testing": "Testing…",
+        "success": "Key works",
+        "error": "Invalid key"
+      },
+      "audio_quality": {
+        "title": "Audio quality",
+        "description": "Eco uses less data, Lossless preserves the original audio."
+      },
+      "automix": {
+        "title": "Automix",
+        "description": "Blend compatible tracks with smooth transitions automatically."
+      },
+      "automix_duration": {
+        "title": "Automix transition",
+        "description": "Length of the automatic transition between mixed tracks."
+      },
+      "hover_preview": {
+        "title": "Hover preview",
+        "description": "Play a short preview when hovering over a track with the mouse."
+      },
+      "metronome": {
+        "title": "Metronome",
+        "description": "Keep a click track in tempo with the current song."
+      },
+      "metronome_bpm": {
+        "title": "Metronome tempo",
+        "description": "Beats per minute for the metronome."
+      },
+      "vocal_mode": {
+        "title": "Vocal isolation",
+        "description": "Experimental processing of the center channel.",
+        "off": "Off",
+        "instrumental": "Instrumental",
+        "vocals": "Vocals"
+      },
+      "gpu": {
+        "title": "GPU acceleration",
+        "description": "Use hardware acceleration for visual effects. Requires an app restart."
+      },
+      "gpu_restart": {
+        "title": "Restart required",
+        "description": "GPU acceleration will be applied the next time Liner starts.",
+        "button": "Restart Liner"
+      },
+      "lyrics_translation": {
+        "title": "Lyrics translation",
+        "description": "Translate synced lyrics into your app language."
+      },
+      "personalized_home": {
+        "title": "Personalized home",
+        "description": "Show a “For you” section based on recent listening on this device."
+      },
+      "longer_daily_mixes": {
+        "title": "Longer Daily Mixes",
+        "description": "Ask daily mixes to include more tracks."
+      },
+      "visual_style": {
+        "title": "Visual style",
+        "description": "Choose the glass effect used across the interface."
+      },
+      "background": {
+        "title": "Custom background",
+        "description": "Image URL used as the app background."
+      },
+      "logo": {
+        "title": "Custom logo",
+        "description": "Image URL used as the sidebar logo."
+      },
+      "lyrics_font": {
+        "title": "Lyrics font",
+        "description": "Typeface used for synced lyrics."
+      },
+      "animations": {
+        "title": "Extra animations",
+        "description": "Add decorative motion to the interface."
+      },
+      "christmas": {
+        "title": "Christmas theme",
+        "description": "Show seasonal decorations automatically."
+      },
+      "pinned_items": {
+        "title": "Pinned items",
+        "description": "Playlists and artists shown under the sidebar navigation.",
+        "empty": "No pinned items yet. Pin a playlist or artist to see it here.",
+        "remove": "Unpin"
       }
     },
+    "ai": {
+      "description": "Recommendations, Scoutcode and language-aware lyrics."
+    },
     "audio": {
+      "description": "Playback quality, transitions, normalization and audio processing.",
       "pause_on_device_change": {
         "title": "Pause on device change",
         "description": "Automatically pause playback when the audio output device changes."
@@ -1296,5 +1402,66 @@
     "youtube_back_title": "YouTube is back",
     "youtube_back_desc": "Every song can play again.",
     "still_youtube_title": "YouTube still isn't available"
+  },
+  "modded": {
+    "hub": {
+      "eyebrow": "Modded Liner",
+      "title": "Control center",
+      "description": "Every modded feature now lives where you expect it. Jump to statistics, recommendations or the right settings tab.",
+      "statistics": {
+        "title": "Statistics",
+        "description": "Listening minutes, top tracks, artists and recent history."
+      },
+      "home": {
+        "title": "Personalized home",
+        "description": "AI recommendations and the For you section."
+      },
+      "local": {
+        "title": "Local library",
+        "description": "Imported files and duplicate cleanup."
+      },
+      "ai": {
+        "title": "AI settings",
+        "description": "Scoutcode key, recommendations, translation and daily mixes."
+      },
+      "audio": {
+        "title": "Audio settings",
+        "description": "Quality, crossfade, automix, metronome and GPU acceleration."
+      },
+      "appearance": {
+        "title": "Appearance settings",
+        "description": "Glass style, backgrounds, fonts, animations and pinned items."
+      },
+      "settings_title": "Settings moved",
+      "settings_description": "Audio and AI now have dedicated tabs in Settings, and appearance options are grouped under Appearance.",
+      "open_statistics": "Open full statistics",
+      "pinned_count": "pinned items"
+    },
+    "stats": {
+      "eyebrow": "Liner Wrapped",
+      "title": "Listening statistics",
+      "description": "Everything you played on this device, summarized locally. Nothing is uploaded.",
+      "back": "Control center",
+      "clear": "Clear statistics",
+      "minutes": "Minutes listened",
+      "unique_tracks": "Unique tracks",
+      "unique_artists": "Unique artists",
+      "events": "Plays recorded",
+      "top_tracks": "Top tracks",
+      "top_artists": "Top artists",
+      "recent": "Recently played",
+      "empty": {
+        "title": "No listening history yet",
+        "description": "Play a few songs to generate your personal Wrapped."
+      }
+    },
+    "recommendations": {
+      "title": "Recommended for you",
+      "description": "Suggested by Scoutcode from your recent listening.",
+      "refresh": "Refresh recommendations",
+      "missing_key": "Add your Scoutcode API key in Settings → AI to enable recommendations.",
+      "error": "Couldn't load recommendations. Check your key and connection.",
+      "empty": "No recommendations yet."
+    }
   }
 }

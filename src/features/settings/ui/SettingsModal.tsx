@@ -8,6 +8,8 @@ import {
 } from "@mingcute/react";
 import {
   Play,
+  VolumeLoud,
+  StarsMinimalistic,
   Palette,
   InfoCircle,
   Database,
@@ -20,6 +22,8 @@ import { useTranslation, getTranslationsForAllLocales } from "@/languages";
 import { useModalStore } from "@/features/library";
 import {
   PlaybackTab,
+  AudioTab,
+  AiTab,
   ShortcutsTab,
   AppearanceTab,
   StorageTab,
@@ -32,6 +36,8 @@ import { SettingsSidebar, type SettingsNavIconProps } from "./SettingsSidebar";
 
 type TabId =
   | "Playback"
+  | "Audio"
+  | "Ai"
   | "Shortcuts"
   | "Overlay"
   | "Discord"
@@ -42,6 +48,8 @@ type TabId =
 
 const TAB_ICONS: Record<TabId, React.ComponentType<SettingsNavIconProps>> = {
   Playback: Play,
+  Audio: VolumeLoud,
+  Ai: StarsMinimalistic,
   Shortcuts: KeyboardFill,
   Overlay: Widget5,
   Discord: DiscordFill,
@@ -54,9 +62,9 @@ const TAB_ICONS: Record<TabId, React.ComponentType<SettingsNavIconProps>> = {
 type TabGroupKey = "player" | "interface" | "integrations" | "application";
 
 const TAB_GROUPS: { labelKey: TabGroupKey; ids: TabId[] }[] = [
-  { labelKey: "player", ids: ["Playback", "Shortcuts"] },
+  { labelKey: "player", ids: ["Playback", "Audio", "Shortcuts"] },
   { labelKey: "interface", ids: ["Appearance", "Overlay"] },
-  { labelKey: "integrations", ids: ["Youtube", "Discord"] },
+  { labelKey: "integrations", ids: ["Ai", "Youtube", "Discord"] },
   { labelKey: "application", ids: ["Storage", "About"] },
 ];
 
@@ -82,15 +90,83 @@ const SETTING_ITEMS: { tabId: TabId; titleKey: string; descKey?: string }[] = [
     titleKey: "settings.audio.pause_on_device_change.title",
     descKey: "settings.audio.pause_on_device_change.description",
   },
+  // Audio
   {
-    tabId: "Playback",
+    tabId: "Audio",
+    titleKey: "settings.modded.audio_quality.title",
+    descKey: "settings.modded.audio_quality.description",
+  },
+  {
+    tabId: "Audio",
     titleKey: "settings.modded.crossfade.title",
     descKey: "settings.modded.crossfade.description",
   },
   {
-    tabId: "Playback",
+    tabId: "Audio",
+    titleKey: "settings.modded.automix.title",
+    descKey: "settings.modded.automix.description",
+  },
+  {
+    tabId: "Audio",
+    titleKey: "settings.modded.smart_shuffle.title",
+    descKey: "settings.modded.smart_shuffle.description",
+  },
+  {
+    tabId: "Audio",
+    titleKey: "settings.modded.volume_norm.title",
+    descKey: "settings.modded.volume_norm.description",
+  },
+  {
+    tabId: "Audio",
+    titleKey: "settings.modded.hover_preview.title",
+    descKey: "settings.modded.hover_preview.description",
+  },
+  {
+    tabId: "Audio",
+    titleKey: "settings.modded.metronome.title",
+    descKey: "settings.modded.metronome.description",
+  },
+  {
+    tabId: "Audio",
+    titleKey: "settings.modded.vocal_mode.title",
+    descKey: "settings.modded.vocal_mode.description",
+  },
+  {
+    tabId: "Audio",
     titleKey: "settings.modded.performance.title",
     descKey: "settings.modded.performance.description",
+  },
+  {
+    tabId: "Audio",
+    titleKey: "settings.modded.gpu.title",
+    descKey: "settings.modded.gpu.description",
+  },
+
+  // AI
+  {
+    tabId: "Ai",
+    titleKey: "settings.modded.ai.title",
+    descKey: "settings.modded.ai.description",
+  },
+  {
+    tabId: "Ai",
+    titleKey: "settings.modded.api_key.title",
+    descKey: "settings.modded.api_key.description",
+  },
+  {
+    tabId: "Ai",
+    titleKey: "settings.modded.lyrics_translation.title",
+    descKey: "settings.modded.lyrics_translation.description",
+  },
+  {
+    tabId: "Ai",
+    titleKey: "settings.modded.personalized_home.title",
+    descKey: "settings.modded.personalized_home.description",
+  },
+  {
+    tabId: "Ai",
+    titleKey: "settings.modded.longer_daily_mixes.title",
+    descKey: "settings.modded.longer_daily_mixes.description",
   },
 
   // Shortcuts
@@ -230,6 +306,26 @@ const SETTING_ITEMS: { tabId: TabId; titleKey: string; descKey?: string }[] = [
     titleKey: "settings.modded.visual_style.title",
     descKey: "settings.modded.visual_style.description",
   },
+  {
+    tabId: "Appearance",
+    titleKey: "settings.modded.lyrics_font.title",
+    descKey: "settings.modded.lyrics_font.description",
+  },
+  {
+    tabId: "Appearance",
+    titleKey: "settings.modded.animations.title",
+    descKey: "settings.modded.animations.description",
+  },
+  {
+    tabId: "Appearance",
+    titleKey: "settings.modded.christmas.title",
+    descKey: "settings.modded.christmas.description",
+  },
+  {
+    tabId: "Appearance",
+    titleKey: "settings.modded.pinned_items.title",
+    descKey: "settings.modded.pinned_items.description",
+  },
 
   // Storage
   {
@@ -256,10 +352,19 @@ const SETTING_ITEMS: { tabId: TabId; titleKey: string; descKey?: string }[] = [
 export default function SettingsModal() {
   const { t } = useTranslation();
   const open = useModalStore((state) => state.settingsOpen);
+  const requestedTab = useModalStore((state) => state.settingsTab);
   const close = useModalStore((state) => state.closeSettings);
 
   const [activeTab, setActiveTab] = useState<TabId>("Playback");
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    if (!open || !requestedTab) return;
+    const match = (Object.keys(TAB_ICONS) as TabId[]).find(
+      (tab) => tab.toLowerCase() === requestedTab.toLowerCase(),
+    );
+    if (match) setActiveTab(match);
+  }, [open, requestedTab]);
 
   const handleClose = () => {
     setSearchQuery("");
@@ -268,6 +373,8 @@ export default function SettingsModal() {
 
   const tabLabels: Record<TabId, string> = {
     Playback: t("settings.tabs.playback"),
+    Audio: t("settings.tabs.audio"),
+    Ai: t("settings.tabs.ai"),
     Shortcuts: t("settings.tabs.shortcuts") || "Shortcuts",
     Overlay: t("settings.tabs.overlay") || "Overlay",
     Discord: t("settings.tabs.discord") || "Discord RPC",
@@ -279,6 +386,8 @@ export default function SettingsModal() {
 
   const tabDescriptions: Record<TabId, string> = {
     Playback: t("settings.playback.description"),
+    Audio: t("settings.audio.description"),
+    Ai: t("settings.ai.description"),
     Shortcuts:
       t("settings.shortcuts.description") ||
       "System-wide and player keyboard shortcuts.",
@@ -303,6 +412,8 @@ export default function SettingsModal() {
 
     const TAB_LABEL_KEYS: Record<TabId, string> = {
       Playback: "settings.tabs.playback",
+      Audio: "settings.tabs.audio",
+      Ai: "settings.tabs.ai",
       Shortcuts: "settings.tabs.shortcuts",
       Overlay: "settings.tabs.overlay",
       Discord: "settings.tabs.discord",
@@ -314,6 +425,8 @@ export default function SettingsModal() {
 
     const TAB_DESC_KEYS: Record<TabId, string> = {
       Playback: "settings.playback.description",
+      Audio: "settings.audio.description",
+      Ai: "settings.ai.description",
       Shortcuts: "settings.shortcuts.description",
       Overlay: "settings.overlay.description",
       Discord: "settings.discord.description",
@@ -429,6 +542,8 @@ export default function SettingsModal() {
               {activeTab === "Playback" && (
                 <PlaybackTab searchQuery={searchQuery} />
               )}
+              {activeTab === "Audio" && <AudioTab searchQuery={searchQuery} />}
+              {activeTab === "Ai" && <AiTab searchQuery={searchQuery} />}
               {activeTab === "Shortcuts" && (
                 <ShortcutsTab searchQuery={searchQuery} />
               )}

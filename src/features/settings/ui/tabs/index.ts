@@ -1,4 +1,6 @@
 export { PlaybackTab } from "./PlaybackTab";
+export { AudioTab } from "./AudioTab";
+export { AiTab } from "./AiTab";
 export { ShortcutsTab } from "./ShortcutsTab";
 export { AppearanceTab } from "./AppearanceTab";
 export { StorageTab } from "./StorageTab";
