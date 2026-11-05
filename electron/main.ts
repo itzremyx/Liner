@@ -267,8 +267,10 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       sandbox: false,
-      devTools: true,
-      backgroundThrottling: false, // keeps audio timer and playback ticks running when app is in background or another workspace
+      devTools: !app.isPackaged,
+      // AudioMediaElement events keep playback alive; allowing Chromium to
+      // throttle an unfocused renderer avoids an unnecessary hidden timer loop.
+      backgroundThrottling: true,
       webSecurity: true,
     },
   });

@@ -102,6 +102,9 @@ function SongCard({
   const previewEnabled = useModdedSettingsStore(
     (state) => state.hoverPreviewEnabled,
   );
+  const performanceMode = useModdedSettingsStore(
+    (state) => state.performanceMode,
+  );
 
   useEffect(() => {
     setImageLoaded(isCoverReady(coverUrl));
@@ -176,12 +179,12 @@ function SongCard({
       }}
       onContextMenu={onContextMenu}
       onMouseEnter={() => {
-        if (previewEnabled && previewTrack && !isCurrentlyPlaying) {
+        if (previewEnabled && !performanceMode && previewTrack && !isCurrentlyPlaying) {
           scheduleTrackPreview(previewTrack);
         }
       }}
       onMouseLeave={() => {
-        if (previewEnabled) stopTrackPreview();
+        if (previewEnabled && !performanceMode) stopTrackPreview();
       }}
       onKeyDown={(event) => {
         if (!onPlay) return;
