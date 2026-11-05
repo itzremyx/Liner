@@ -806,35 +806,35 @@
     "modded": {
       "crossfade": {
         "title": "Fondu enchaîné personnalisé",
-        "description": "Adoucit la transition entre les titres avec le pipeline audio léger."
+        "description": "Enchaînement fluide entre les pistes avec un pipeline audio léger."
       },
       "crossfade_duration": {
-        "title": "Durée du fondu",
-        "description": "Définit la durée utilisée au démarrage d'un nouveau titre."
+        "title": "Durée du fondu enchaîné",
+        "description": "Longueur de la transition entre les morceaux"
       },
       "performance": {
         "title": "Mode performance",
-        "description": "Réduit les effets décoratifs et le travail en arrière-plan pour limiter le CPU et la RAM."
+        "description": "Réduit les effets décoratifs et le travail en arrière-plan pour une utilisation moindre du CPU et de la RAM."
+      },
+      "smart_shuffle": {
+        "title": "Lecture aléatoire intelligente avec IA",
+        "description": "L'IA analyse vos habitudes d'écoute pour créer un ordre de lecture plus intelligent."
+      },
+      "volume_norm": {
+        "title": "Normalisation du volume",
+        "description": "Ajuste automatiquement le volume des pistes à un niveau de puissance sonore cohérent."
+      },
+      "target_loudness": {
+        "title": "Puissance sonore cible",
+        "description": "Cible LUFS pour la normalisation (Spotify utilise -14 LUFS)"
       },
       "ai": {
         "title": "Recommandations IA",
-        "description": "Utilise MiniMax M3.1 Flash via Scoutcode selon votre écoute."
+        "description": "Utilisez MiniMax M3.1 Flash via Scoutcode pour suggérer de la musique basée sur votre contexte d'écoute."
       },
       "api_key": {
         "title": "Clé API Scoutcode",
-        "description": "Stockée localement sur cet appareil et jamais publiée dans le dépôt."
-      },
-      "visual_style": {
-        "title": "Style visuel moddé",
-        "description": "Choisissez le rendu Blur, Acrylic ou Liquid Glass."
-      },
-      "background": {
-        "title": "Arrière-plan personnalisé",
-        "description": "Utilisez l'URL d'une image comme arrière-plan."
-      },
-      "logo": {
-        "title": "Logo personnalisé",
-        "description": "Utilisez l'URL d'une image pour le logo."
+        "description": "Stockée localement sur cet appareil. Elle n'est jamais committée dans le dépôt."
       }
     },
     "audio": {

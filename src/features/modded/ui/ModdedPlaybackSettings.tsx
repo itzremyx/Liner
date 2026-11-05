@@ -31,6 +31,15 @@ export function ModdedPlaybackSettings({
     (state) => state.aiRecommendationsEnabled,
   );
   const apiKey = useModdedSettingsStore((state) => state.scoutcodeApiKey);
+  const smartShuffleEnabled = useModdedSettingsStore(
+    (state) => state.smartShuffleEnabled,
+  );
+  const volumeNormalization = useModdedSettingsStore(
+    (state) => state.volumeNormalization,
+  );
+  const targetLoudnessLUFS = useModdedSettingsStore(
+    (state) => state.targetLoudnessLUFS,
+  );
   const set = useModdedSettingsStore((state) => state);
 
   const testScoutcode = async () => {
@@ -91,6 +100,54 @@ export function ModdedPlaybackSettings({
           />
         }
       />
+      <SettingRow
+        title="Smart Shuffle with AI"
+        description="Let AI analyze your listening patterns to create more intelligent shuffle order."
+        titleKey="settings.modded.smart_shuffle.title"
+        descKey="settings.modded.smart_shuffle.description"
+        searchQuery={searchQuery}
+        control={
+          <ToggleSwitch
+            checked={smartShuffleEnabled}
+            onChange={set.setSmartShuffleEnabled}
+            ariaLabel="Smart Shuffle with AI"
+          />
+        }
+      />
+      <SettingRow
+        title="Volume normalization"
+        description="Automatically adjust track volumes to a consistent loudness level."
+        titleKey="settings.modded.volume_norm.title"
+        descKey="settings.modded.volume_norm.description"
+        searchQuery={searchQuery}
+        control={
+          <ToggleSwitch
+            checked={volumeNormalization}
+            onChange={set.setVolumeNormalization}
+            ariaLabel="Volume normalization"
+          />
+        }
+      />
+      {volumeNormalization && (
+        <SettingBlock
+          title="Target loudness"
+          description={`${targetLoudnessLUFS} LUFS (Spotify uses -14 LUFS)`}
+          titleKey="settings.modded.target_loudness.title"
+          descKey="settings.modded.target_loudness.description"
+          searchQuery={searchQuery}
+        >
+          <Slider
+            value={targetLoudnessLUFS}
+            min={-23}
+            max={-5}
+            step={1}
+            unit=" LUFS"
+            showValue
+            onChange={(value) => set.setTargetLoudnessLUFS(value)}
+            ariaLabel="Target loudness"
+          />
+        </SettingBlock>
+      )}
       <SettingRow
         title="AI recommendations"
         description="Use MiniMax M3.1 Flash through Scoutcode to suggest music from your listening context."

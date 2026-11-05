@@ -12,6 +12,9 @@ export interface ModdedSettingsState {
   themeStyle: ModdedThemeStyle;
   customBackgroundUrl: string;
   customLogoUrl: string;
+  volumeNormalization: boolean;
+  targetLoudnessLUFS: number;
+  smartShuffleEnabled: boolean;
 }
 
 interface ModdedSettingsActions {
@@ -23,6 +26,9 @@ interface ModdedSettingsActions {
   setThemeStyle: (style: ModdedThemeStyle) => void;
   setCustomBackgroundUrl: (url: string) => void;
   setCustomLogoUrl: (url: string) => void;
+  setVolumeNormalization: (enabled: boolean) => void;
+  setTargetLoudnessLUFS: (lufs: number) => void;
+  setSmartShuffleEnabled: (enabled: boolean) => void;
 }
 
 export type ModdedSettingsStore = ModdedSettingsState & ModdedSettingsActions;
@@ -43,6 +49,9 @@ export const useModdedSettingsStore = create<ModdedSettingsStore>()(
       themeStyle: "classic",
       customBackgroundUrl: "",
       customLogoUrl: "",
+      volumeNormalization: false,
+      targetLoudnessLUFS: -14,
+      smartShuffleEnabled: false,
 
       setCrossfadeEnabled: (crossfadeEnabled) => set({ crossfadeEnabled }),
       setCrossfadeDurationMs: (durationMs) =>
@@ -55,6 +64,14 @@ export const useModdedSettingsStore = create<ModdedSettingsStore>()(
       setCustomBackgroundUrl: (customBackgroundUrl) =>
         set({ customBackgroundUrl }),
       setCustomLogoUrl: (customLogoUrl) => set({ customLogoUrl }),
+      setVolumeNormalization: (volumeNormalization) =>
+        set({ volumeNormalization }),
+      setTargetLoudnessLUFS: (targetLoudnessLUFS) =>
+        set({
+          targetLoudnessLUFS: Math.max(-23, Math.min(-5, targetLoudnessLUFS)),
+        }),
+      setSmartShuffleEnabled: (smartShuffleEnabled) =>
+        set({ smartShuffleEnabled }),
     }),
     {
       name: STORAGE_KEY,
@@ -64,6 +81,9 @@ export const useModdedSettingsStore = create<ModdedSettingsStore>()(
         state.crossfadeDurationMs = clampCrossfade(state.crossfadeDurationMs);
         if (!Number.isFinite(state.crossfadeDurationMs)) {
           state.crossfadeDurationMs = 1_800;
+        }
+        if (!Number.isFinite(state.targetLoudnessLUFS)) {
+          state.targetLoudnessLUFS = -14;
         }
       },
     },

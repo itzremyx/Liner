@@ -943,15 +943,27 @@
     "modded": {
       "crossfade": {
         "title": "Custom crossfade",
-        "description": "Fade smoothly between tracks using the low-memory audio pipeline."
+        "description": "Fade smoothly between tracks using the existing low-memory audio pipeline."
       },
       "crossfade_duration": {
         "title": "Crossfade duration",
-        "description": "Set the duration used when a new track starts."
+        "description": "Length of the fade transition between songs"
       },
       "performance": {
         "title": "Performance mode",
         "description": "Reduce decorative effects and background work for lower CPU and RAM usage."
+      },
+      "smart_shuffle": {
+        "title": "Smart Shuffle with AI",
+        "description": "Let AI analyze your listening patterns to create more intelligent shuffle order."
+      },
+      "volume_norm": {
+        "title": "Volume normalization",
+        "description": "Automatically adjust track volumes to a consistent loudness level."
+      },
+      "target_loudness": {
+        "title": "Target loudness",
+        "description": "LUFS target for normalization (Spotify uses -14 LUFS)"
       },
       "ai": {
         "title": "AI recommendations",
@@ -959,19 +971,7 @@
       },
       "api_key": {
         "title": "Scoutcode API key",
-        "description": "Stored locally on this device and never committed to the repository."
-      },
-      "visual_style": {
-        "title": "Modded visual style",
-        "description": "Choose the Blur, Acrylic or Liquid Glass surface treatment."
-      },
-      "background": {
-        "title": "Custom background",
-        "description": "Use an image URL as the app background."
-      },
-      "logo": {
-        "title": "Custom logo",
-        "description": "Use an image URL for the custom logo."
+        "description": "Stored locally on this device. It is never committed to the repository."
       }
     },
     "audio": {

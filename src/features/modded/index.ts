@@ -14,6 +14,12 @@ export {
   SCOUTCODE_MODEL,
   type ScoutcodeRecommendation,
 } from "./lib/scoutcode";
+export { smartShuffle, heuristicSmartShuffle } from "./lib/smartShuffle";
+export {
+  applyNormalizationGain,
+  calculateNormalizationGain,
+  clearNormalizationCache,
+} from "./lib/volumeNormalization";
 export { useModdedThemeSync } from "./hooks/useModdedThemeSync";
 export { ModdedPlaybackSettings } from "./ui/ModdedPlaybackSettings";
 export { ModdedAppearanceSettings } from "./ui/ModdedAppearanceSettings";

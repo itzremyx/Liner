@@ -8,6 +8,7 @@ import HighlightedText from "@/shared/ui/HighlightedText";
 import ExplicitBadge from "@/shared/ui/ExplicitBadge";
 import CoverImage from "@/features/covers/ui/CoverImage";
 import { isCoverReady } from "@/features/covers/lib/coverArt";
+import { usePlayerStore } from "../store/playerStore";
 import type { TrackArtist } from "@/shared/types";
 
 export interface SongCardProps {
@@ -44,6 +45,7 @@ export interface SongCardProps {
 }
 
 function SongCard({
+  id,
   title,
   artists,
   artistId,
@@ -75,6 +77,12 @@ function SongCard({
   const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(() => isCoverReady(coverUrl));
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Currently Playing Indicator
+  const currentTrack = usePlayerStore((state) => state.currentTrack);
+  const playerStatus = usePlayerStore((state) => state.status);
+  const isCurrentlyPlaying =
+    id && currentTrack?.id === id && playerStatus === "playing";
 
   useEffect(() => {
     setImageLoaded(isCoverReady(coverUrl));
@@ -191,6 +199,24 @@ function SongCard({
                 }`}
                 draggable={false}
               />
+            )}
+            {isCurrentlyPlaying && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[2px]">
+                <div className="flex items-center justify-center gap-[2px]">
+                  <div
+                    className="w-[2px] h-[10px] bg-white rounded-full animate-[pulse_0.8s_ease-in-out_infinite]"
+                    style={{ animationDelay: "0ms" }}
+                  />
+                  <div
+                    className="w-[2px] h-[14px] bg-white rounded-full animate-[pulse_0.8s_ease-in-out_infinite]"
+                    style={{ animationDelay: "150ms" }}
+                  />
+                  <div
+                    className="w-[2px] h-[10px] bg-white rounded-full animate-[pulse_0.8s_ease-in-out_infinite]"
+                    style={{ animationDelay: "300ms" }}
+                  />
+                </div>
+              </div>
             )}
           </div>
         )}
