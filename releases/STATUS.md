@@ -1,92 +1,29 @@
-# 📊 Status APK Build
+# Status APK Build
 
-## 🚀 Build en cours !
+## Build réussi
 
-**Workflow lancé** : https://github.com/itzremyx/Liner/actions/runs/41980805743
+- Dernier workflow : https://github.com/itzremyx/Liner/actions/runs/42087441180
+- Commit : `4ab0edc`
+- APK local : [`app-debug.apk`](./app-debug.apk) (6,04 Mo)
+- SHA-256 : `A052BECED1ACD14B6691930B27FE1206B3BCB3EA6C3FD299AC09F6946B75C018`
 
-**Temps estimé** : ~10 minutes
+## Télécharger / reconstruire
 
----
+Le workflow se relance automatiquement à chaque push sur `modded` touchant
+`src/**`, `android/**` ou `capacitor.config.ts`.
 
-## 📝 Historique des corrections
+Méthode manuelle : https://github.com/itzremyx/Liner/actions/workflows/build-android.yml
+→ « Run workflow » → branche `modded` → télécharger l'artifact
+`modded-liner-debug-apk`.
 
-### ❌ Tentative 1 - Échec
-- **Problème** : `android-actions/setup-android@v3.3` version inexistante
-- **Solution** : Corrigé vers v3
+## Installation Android
 
-### ❌ Tentative 2 - Échec  
-- **Problème** : `android-actions/setup-android@v3` échoue avec licenses
-- **Solution** : Utilisation du SDK pré-installé sur GitHub runners
+1. Transférez `app-debug.apk` sur le téléphone.
+2. Paramètres → Sécurité → activer « Sources inconnues ».
+3. Ouvrez le fichier APK et installez.
+4. Lancez Modded Liner et ouvrez le centre de contrôle via l'icône étincelle.
 
-### ✅ Tentative 3 - En cours
-- **Fix** : Utilisation de `$ANDROID_HOME` pré-installé
-- **Fix** : Acceptation automatique des licenses
-- **Fix** : Installation manuelle des packages requis
+## Build local
 
----
-
-## 💻 Comment télécharger l'APK une fois prêt
-
-### Méthode automatique ⭐
-
-Double-cliquez sur **`GET_APK_NOW.bat`** dans le dossier racine :
-- Surveille le build automatiquement
-- Télécharge l'APK dès qu'il est prêt
-- Le place dans `releases/app-debug.apk`
-
-### Méthode manuelle
-
-1. Attendez que le build termine (~10 min)
-2. Allez sur : https://github.com/itzremyx/Liner/actions/runs/41980805743
-3. Scrollez vers "Artifacts"
-4. Téléchargez `modded-liner-debug-apk.zip`
-5. Décompressez → `app-debug.apk`
-
----
-
-## 📱 Installation sur Android
-
-1. Transférez `app-debug.apk` sur votre téléphone
-2. Paramètres → Sécurité → "Sources inconnues" ON
-3. Ouvrez le fichier APK
-4. Installez
-5. Profitez ! 🎵
-
----
-
-## 🔧 Build local (si vous préférez)
-
-**Prérequis** :
-- ✅ Java JDK (déjà installé)
-- ❌ Android SDK (~3-4 GB)
-
-**Commande** :
-```powershell
-cd android
-.\gradlew.bat assembleDebug
-```
-
-**Mais GitHub Actions est plus simple !**
-
----
-
-## 📊 Informations
-
-- **Taille APK** : ~15-20 MB (debug)
-- **Min Android** : 8.0 (API 26)
-- **Target Android** : 16 (API 35)
-- **Architecture** : ARM64, ARMv7, x86_64
-
----
-
-**Dernière mise à jour** : 5 novembre 2026, 06:50 UTC  
-**Status** : ✅ Build en cours - Run #41981206279  
-**URL** : https://github.com/itzremyx/Liner/actions/runs/41981206279  
-
----
-
-## 📝 Mise à jour récente
-
-✅ **PR #8 mergée** : Dependabot minor/patch (8 packages mis à jour)  
-✅ **Fix pnpm install** : Removed frozen-lockfile flag  
-✅ **Workflow relancé** : Tentative #4 en cours (~10 min)
+Java 21 et Android SDK 36 sont requis (Capacitor 8). GitHub Actions reste la
+méthode recommandée.
