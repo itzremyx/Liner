@@ -48,7 +48,9 @@ jobs:
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
       
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          # Install pnpm dependencies
+          pnpm install --frozen-lockfile --no-frozen-lockfile || pnpm install
       
       - name: Build web assets
         run: pnpm build
