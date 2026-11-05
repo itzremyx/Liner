@@ -1,25 +1,42 @@
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: /
+  # npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: weekly
+      interval: "weekly"
     open-pull-requests-limit: 5
+    # Limit to minor and patch updates only (no major breaking changes)
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       minor-and-patch:
-        update-types: [minor, patch]
-    ignore:
-      - dependency-name: electron
-        update-types: [version-update:semver-major]
-      - dependency-name: "@types/node"
-        update-types: [version-update:semver-major]
-      - dependency-name: "@solar-icons/react"
-        update-types: [version-update:semver-major]
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "automerge"
+    commit-message:
+      prefix: "build(deps)"
+      include: "scope"
 
-  - package-ecosystem: github-actions
-    directory: /
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
-      interval: monthly
+      interval: "weekly"
+    open-pull-requests-limit: 3
     groups:
       actions:
-        patterns: ["*"]
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci(deps)"
+      include: "scope"
