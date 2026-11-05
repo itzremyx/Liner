@@ -9,6 +9,8 @@ export interface AudioFormat {
   signatureCipher?: string;
 }
 
+export type AudioQuality = "low" | "standard" | "high" | "lossless";
+
 export interface ResolvedAudioStream {
   url: string;
   mimeType: string;
@@ -64,15 +66,21 @@ export function extractAudioFormats(playerResponse: unknown): AudioFormat[] {
 export function selectBestAudioFormat(
   formats: AudioFormat[],
   preferredCodec?: "opus" | "aac",
+  maxBitrate?: number,
 ): AudioFormat | null {
   if (formats.length === 0) return null;
   const order =
     preferredCodec === "aac" ? [140, 139, 251, 250, 249] : PREFERRED_ITAGS;
+  const eligible =
+    maxBitrate && maxBitrate > 0
+      ? formats.filter((format) => format.bitrate <= maxBitrate)
+      : formats;
+  const pool = eligible.length > 0 ? eligible : formats;
   for (const itag of order) {
-    const match = formats.find((format) => format.itag === itag);
+    const match = pool.find((format) => format.itag === itag);
     if (match) return match;
   }
-  return [...formats].sort((a, b) => b.bitrate - a.bitrate)[0] ?? null;
+  return [...pool].sort((a, b) => b.bitrate - a.bitrate)[0] ?? null;
 }
 
 function expiryFromUrl(url: string): string | null {

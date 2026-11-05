@@ -8,6 +8,8 @@ import { useTranslation } from "@/languages";
 
 import type { TrackArtist } from "@/shared/types";
 import { isLocalTrackId } from "@/shared/media/local";
+import { usePlaylistsList } from "@/features/library/hooks/usePlaylists";
+import { useTrackPlaylistMembership } from "@/features/library/hooks/useTrackPlaylistMembership";
 
 export interface SongCardWithMenuProps {
   id?: string;
@@ -88,6 +90,13 @@ function SongCardWithMenu({
     return 0;
   }, [duration, durationMs]);
 
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { data: playlistsData } = usePlaylistsList();
+  const { membership: playlistMembership } = useTrackPlaylistMembership(
+    id,
+    playlistsData?.playlists ?? [],
+    menuOpen,
+  );
   const menuItems = useSongMenuItems({
     id,
     title,
@@ -102,9 +111,8 @@ function SongCardWithMenu({
     playlistTitle,
     onRemoveFromQueue,
     onRemoveFromDevice,
+    menuOpen,
   });
-
-  const [menuOpen, setMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState<{
     x: number;
     y: number;
@@ -207,6 +215,7 @@ function SongCardWithMenu({
           : undefined
       }
       inPlaylist={Boolean(playlistId)}
+      playlistMembership={playlistMembership}
     />
   );
 }

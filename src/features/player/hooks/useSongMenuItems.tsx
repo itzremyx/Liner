@@ -24,6 +24,7 @@ import { showToast } from "@/shared/ui";
 import { buildShareUrl } from "@/shared/utils/share";
 import { isLocalTrackId } from "@/shared/media/local";
 import { useModdedSettingsStore } from "@/features/modded/store/moddedStore";
+import { useTrackPlaylistMembership } from "@/features/library/hooks/useTrackPlaylistMembership";
 
 const CLOUD_ONLY_ITEMS = new Set([
   "start-radio",
@@ -49,6 +50,7 @@ export interface SongMenuContext {
   /** play queue rows: adds "Remove from queue" (the queue animates the row out) */
   onRemoveFromQueue?: () => void;
   onRemoveFromDevice?: () => void;
+  menuOpen?: boolean;
 }
 
 export function useSongMenuItems(ctx: SongMenuContext): DropdownMenuItem[] {
@@ -67,9 +69,15 @@ export function useSongMenuItems(ctx: SongMenuContext): DropdownMenuItem[] {
     playlistTitle,
     onRemoveFromQueue,
     onRemoveFromDevice,
+    menuOpen = false,
   } = ctx;
 
   const { data: playlistsData } = usePlaylistsList();
+  const { membership, isLoading: membershipLoading } = useTrackPlaylistMembership(
+    id,
+    playlistsData?.playlists ?? [],
+    menuOpen,
+  );
 
   const likeMutation = useLikeTrack();
   const unlikeMutation = useUnlikeTrack();
@@ -261,7 +269,11 @@ export function useSongMenuItems(ctx: SongMenuContext): DropdownMenuItem[] {
         },
         {
           id: "add-to-playlist",
-          label: t("common.add_to_playlist"),
+          label: membershipLoading
+            ? "Vérification des playlists…"
+            : membership.length > 0
+              ? `Déjà dans : ${membership.slice(0, 2).join(", ")}${membership.length > 2 ? ` (+${membership.length - 2})` : ""}`
+              : t("common.add_to_playlist"),
           icon: <LuPlus size={15} />,
           onClick: () => {
             if (!id) return;
@@ -356,6 +368,8 @@ export function useSongMenuItems(ctx: SongMenuContext): DropdownMenuItem[] {
     handleLike,
     handleShare,
     playlistsData,
+    membership,
+    membershipLoading,
     t,
   ]);
 

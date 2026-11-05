@@ -117,6 +117,12 @@ describe("audio format selection", () => {
   it("returns null when there are no direct audio formats", () => {
     expect(selectBestAudioFormat([])).toBeNull();
   });
+
+  it("honours an Eco bitrate cap when a lower format is available", () => {
+    expect(selectBestAudioFormat([low, aac, opus], undefined, 64_000)?.itag).toBe(
+      low.itag,
+    );
+  });
 });
 
 describe("resolveDirectAudioStream", () => {

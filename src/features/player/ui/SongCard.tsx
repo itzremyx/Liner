@@ -54,6 +54,7 @@ export interface SongCardProps {
   trailingAction?: React.ReactNode;
   previewTrack?: Track;
   inPlaylist?: boolean;
+  playlistMembership?: string[];
 }
 
 function SongCard({
@@ -87,6 +88,7 @@ function SongCard({
   trailingAction,
   previewTrack,
   inPlaylist = false,
+  playlistMembership = [],
 }: SongCardProps) {
   const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(() => isCoverReady(coverUrl));
@@ -269,6 +271,7 @@ function SongCard({
               )}
             </h3>
             {inPlaylist ? <span className="shrink-0 rounded-full bg-border-alpha-14 px-[5px] py-[1px] text-[10px] text-text-tertiary" title="Déjà dans cette playlist">✓ playlist</span> : null}
+            {playlistMembership.length > 0 && !inPlaylist ? <span className="shrink-0 rounded-full bg-border-alpha-14 px-[5px] py-[1px] text-[10px] text-text-tertiary" title={playlistMembership.join(", ")}>✓ {playlistMembership.length} playlist{playlistMembership.length > 1 ? "s" : ""}</span> : null}
             {repostedBy && (
               <div
                 className="flex items-center gap-[4px] text-text-tertiary text-body"

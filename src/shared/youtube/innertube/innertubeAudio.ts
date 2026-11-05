@@ -90,6 +90,7 @@ async function resolveViaWebRemix(
 export interface ResolveAudioOptions {
   signal?: AbortSignal;
   preferredCodec?: "opus" | "aac";
+  maxBitrate?: number;
   profiles?: readonly InnertubeProfile[];
 }
 

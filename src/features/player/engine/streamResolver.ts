@@ -32,9 +32,11 @@ import {
 import { findYoutubeStandIn } from "./youtubeStandIn";
 import { findExactSongVersion } from "./exactSongVersion";
 import { appAllowsAccountPlayback } from "./accountPlayback";
+import { usePlayerStore, type AudioQuality } from "../store/playerStore";
 
 export interface ResolveStreamOptions {
   progressive?: boolean;
+  audioQuality?: AudioQuality;
 }
 
 export type {
@@ -59,6 +61,7 @@ async function resolveTvAudio(
 async function resolveYoutubeAudio(
   videoId: string,
   progressive: boolean,
+  maxBitrate: number | undefined,
   signal?: AbortSignal,
 ): Promise<PlaybackStream> {
   if (
@@ -76,13 +79,17 @@ async function resolveYoutubeAudio(
     }
   }
   return fromInnertubeStream(
-    await resolveDirectAudioStream(videoId, { signal }),
+    await resolveDirectAudioStream(videoId, {
+      signal,
+      ...(maxBitrate ? { maxBitrate } : {}),
+    }),
   );
 }
 
 async function resolveYoutubeStandIn(
   track: PlayableTrack,
   progressive: boolean,
+  maxBitrate: number | undefined,
   signal?: AbortSignal,
 ): Promise<PlaybackStream> {
   const videoId = await findYoutubeStandIn(track, signal);
@@ -92,7 +99,7 @@ async function resolveYoutubeStandIn(
     "playback",
     `resolved youtube stand-in ${videoId} for "${track.title}"`,
   );
-  const stream = await resolveYoutubeAudio(videoId, progressive, signal);
+  const stream = await resolveYoutubeAudio(videoId, progressive, maxBitrate, signal);
   stream.standIn = true;
   return stream;
 }
@@ -100,6 +107,7 @@ async function resolveYoutubeStandIn(
 async function resolveSoundCloud(
   track: PlayableTrack,
   progressive: boolean,
+  maxBitrate: number | undefined,
   signal?: AbortSignal,
 ): Promise<PlaybackStream> {
   try {
@@ -114,7 +122,7 @@ async function resolveSoundCloud(
       `soundcloud resolution failed, searching youtube: ${String(soundCloudError)}`,
     );
     try {
-      return await resolveYoutubeStandIn(track, progressive, signal);
+      return await resolveYoutubeStandIn(track, progressive, maxBitrate, signal);
     } catch (standInError) {
       if (isAbortError(standInError, signal)) throw standInError;
       throw soundCloudError;
@@ -126,6 +134,7 @@ async function resolveYoutubeTrack(
   track: PlayableTrack,
   rowVideoId: string,
   progressive: boolean,
+  maxBitrate: number | undefined,
   signal?: AbortSignal,
 ): Promise<PlaybackStream> {
   const songId = track.audioVariant
@@ -143,7 +152,20 @@ async function resolveYoutubeTrack(
     log("cyan", "playback", `resolved liner audio (r2) for "${track.title}"`);
     return fromLinerStream(liner, track);
   }
-  return resolveYoutubeAudio(videoId, progressive, signal);
+  return resolveYoutubeAudio(videoId, progressive, maxBitrate, signal);
+}
+
+function qualityBitrate(quality: AudioQuality): number | undefined {
+  switch (quality) {
+    case "low":
+      return 64_000;
+    case "standard":
+      return 128_000;
+    case "high":
+      return undefined;
+    case "lossless":
+      return undefined;
+  }
 }
 
 export async function resolvePlaybackStream(
@@ -162,6 +184,8 @@ async function resolveStream(
   options: ResolveStreamOptions = {},
 ): Promise<PlaybackStream> {
   const progressive = options.progressive ?? false;
+  const quality = options.audioQuality ?? usePlayerStore.getState().audioQuality;
+  const maxBitrate = qualityBitrate(quality);
   if (isLocalTrackId(track.id))
     return {
       url: localTrackAudioUrl(track.id),
@@ -183,11 +207,11 @@ async function resolveStream(
   if (isOfflineMode()) throw new Error(OFFLINE_UNAVAILABLE_MESSAGE);
   const resolve = (bounded: AbortSignal | undefined) => {
     if (toSoundCloudTrackId(track.id))
-      return resolveSoundCloud(track, progressive, bounded);
+      return resolveSoundCloud(track, progressive, maxBitrate, bounded);
     const videoId = toVideoId(track.id);
     if (videoId)
-      return resolveYoutubeTrack(track, videoId, progressive, bounded);
-    return resolveYoutubeStandIn(track, progressive, bounded);
+      return resolveYoutubeTrack(track, videoId, progressive, maxBitrate, bounded);
+    return resolveYoutubeStandIn(track, progressive, maxBitrate, bounded);
   };
   return progressive ? withResolveTimeout(signal, resolve) : resolve(signal);
 }
