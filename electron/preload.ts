@@ -224,6 +224,9 @@ export interface LinerElectronApi {
     lyrics?: unknown,
   ) => Promise<boolean>;
   pathForFile: (file: File) => string;
+  getHardwareAcceleration: () => Promise<boolean>;
+  setHardwareAcceleration: (enabled: boolean) => Promise<boolean>;
+  relaunchApp: () => Promise<boolean>;
 }
 
 const isHyprland = Boolean(
@@ -491,6 +494,11 @@ const api: LinerElectronApi = {
   savedTracksSetLyrics: (trackId, state, lyrics) =>
     ipcRenderer.invoke("saved-tracks:lyrics-set", trackId, state, lyrics),
   pathForFile: (file) => webUtils.getPathForFile(file),
+  getHardwareAcceleration: () =>
+    ipcRenderer.invoke("modded:get-hardware-acceleration"),
+  setHardwareAcceleration: (enabled) =>
+    ipcRenderer.invoke("modded:set-hardware-acceleration", enabled),
+  relaunchApp: () => ipcRenderer.invoke("modded:relaunch"),
 };
 
 if (location.hostname === "www.youtube.com") {

@@ -83,6 +83,10 @@ import {
   simulatedResponseStatus,
 } from "./netsim/install.js";
 import { registerLocalTrackScheme } from "./local-tracks/protocol.js";
+import {
+  applyHardwareAccelerationPreference,
+  registerHardwareAccelerationIpc,
+} from "./hardware-accel.js";
 import { attachZoomControls } from "./zoom.js";
 import {
   YOUTUBE_REQUEST_URLS,
@@ -109,6 +113,7 @@ if (detectCompositor() !== "none") {
   app.commandLine.appendSwitch("enable-features", "GlobalShortcutsPortal");
 }
 registerLocalTrackScheme();
+applyHardwareAccelerationPreference();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -531,6 +536,8 @@ if (!gotTheLock) {
         "\x1b[43;30m signer \x1b[0m dev signing secret active (unpackaged build only)",
       );
     }
+
+    registerHardwareAccelerationIpc();
 
     // register liner:// so browsers / xdg-open route share links to us
     // (on linux the packaged .desktop carries the mime handler too)

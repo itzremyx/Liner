@@ -91,6 +91,13 @@ export default function ModdedDashboardPage() {
   const [pinHref, setPinHref] = useState("");
   const [coverPlaylistId, setCoverPlaylistId] = useState("");
   const [coverUrl, setCoverUrl] = useState("");
+  const [gpuNeedsRestart, setGpuNeedsRestart] = useState(false);
+
+  const changeHardwareAcceleration = (enabled: boolean) => {
+    settings.setHardwareAcceleration(enabled);
+    setGpuNeedsRestart(true);
+    void window.linerElectron?.setHardwareAcceleration?.(enabled);
+  };
 
   const tracksForAi = useMemo(() => {
     if (player.queue.length > 0) return player.queue.slice(-12);
@@ -208,9 +215,15 @@ export default function ModdedDashboardPage() {
             <ToggleRow label="Daily Mixes longs" checked={settings.longerDailyMixes} onChange={settings.setLongerDailyMixes} />
             <ToggleRow label="Animations" checked={settings.animationsEnabled} onChange={settings.setAnimationsEnabled} />
             <ToggleRow label="Performance mode" hint="Désactive les effets coûteux pour réduire RAM/CPU." checked={settings.performanceMode} onChange={settings.setPerformanceMode} />
-            <ToggleRow label="Accélération GPU" hint="Nécessite un redémarrage d’Electron." checked={settings.hardwareAcceleration} onChange={settings.setHardwareAcceleration} />
+            <ToggleRow label="Accélération GPU" hint="Nécessite un redémarrage d’Electron." checked={settings.hardwareAcceleration} onChange={changeHardwareAcceleration} />
             <ToggleRow label="Thème Noël automatique" checked={settings.christmasTheme} onChange={settings.setChristmasTheme} />
           </div>
+          {gpuNeedsRestart ? (
+            <div className="mt-[10px] flex items-center justify-between gap-[10px] rounded-control bg-bg-primary/60 px-[10px] py-[8px]">
+              <span className="text-caption text-text-tertiary">Le réglage GPU sera appliqué au prochain démarrage.</span>
+              <Button size="sm" variant="secondary" onClick={() => void window.linerElectron?.relaunchApp?.()}>Redémarrer Liner</Button>
+            </div>
+          ) : null}
           <div className="mt-[14px] grid gap-[10px] sm:grid-cols-3">
             <label className="text-caption text-text-tertiary">Mode vocal<select className="mt-[5px] h-[36px] w-full rounded-control border-0 bg-bg-primary px-[9px] text-label text-text-primary" value={settings.vocalMode} onChange={(event) => settings.setVocalMode(event.target.value as VocalMode)}><option value="off">Désactivé</option><option value="instrumental">Instrumental</option><option value="vocals">Voix</option></select></label>
             <label className="text-caption text-text-tertiary">Police des paroles<select className="mt-[5px] h-[36px] w-full rounded-control border-0 bg-bg-primary px-[9px] text-label text-text-primary" value={settings.lyricsFont} onChange={(event) => settings.setLyricsFont(event.target.value as LyricsFont)}><option value="inter">Inter</option><option value="serif">Serif</option><option value="mono">Monospace</option><option value="rounded">Arrondie</option></select></label>
