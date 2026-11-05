@@ -5,6 +5,7 @@ import { useTranslation } from "@/languages";
 import { Tooltip } from "@/shared/ui";
 import { cn } from "@/shared/lib";
 import { useOfflineModeStore } from "@/features/connectivity";
+import { useModdedSettingsStore } from "@/features/modded/store/moddedStore";
 
 export interface SidebarNavItemsProps {
   searchOpen: boolean;
@@ -19,6 +20,7 @@ export function SidebarNavItems({
   const { t } = useTranslation();
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const offline = useOfflineModeStore((state) => state.offline);
+  const pinnedItems = useModdedSettingsStore((state) => state.pinnedItems);
 
   useEffect(() => {
     setPendingHref(null);
@@ -110,6 +112,17 @@ export function SidebarNavItems({
             </Tooltip>
           );
         })}
+      {pinnedItems.length > 0 ? (
+        <div className="mt-[2px] flex w-full flex-col items-center gap-[9px] border-t border-border-alpha-14 pt-[10px]">
+          {pinnedItems.slice(0, 6).map((item) => (
+            <Tooltip key={item.id} content={item.title} side="right" sideOffset={12}>
+              <Link to={item.href} className="group relative flex h-[28px] w-[28px] items-center justify-center overflow-hidden rounded-control bg-border-alpha-14">
+                {item.imageUrl ? <img src={item.imageUrl} alt="" className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-110" /> : <span className="text-[10px] font-[600] text-text-secondary">{item.title.slice(0, 1).toUpperCase()}</span>}
+              </Link>
+            </Tooltip>
+          ))}
+        </div>
+      ) : null}
     </>
   );
 }

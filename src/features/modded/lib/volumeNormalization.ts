@@ -34,9 +34,13 @@ export function calculateNormalizationGain(
     return cached.gainDb;
   }
 
-  // Simplified estimation: assume most modern tracks are mastered around -8 to -12 LUFS
-  // This is just a placeholder - real implementation would use Web Audio API analysis
-  const estimatedLUFS = -10 + (Math.random() - 0.5) * 4; // -12 to -8 range
+  // Keep the fallback stable for streams that cannot be decoded ahead of time.
+  // A random gain made the same track jump in volume on every replay.
+  const hash = [...track.id].reduce(
+    (value, char) => (value * 31 + char.charCodeAt(0)) >>> 0,
+    7,
+  );
+  const estimatedLUFS = -12 + (hash % 41) / 10;
   const gainDb = targetLUFS - estimatedLUFS;
 
   // Clamp gain to prevent extreme adjustments
@@ -77,20 +81,41 @@ export function applyNormalizationGain(
   audioElement.volume = finalVolume;
 }
 
+export function getNormalizedVolume(
+  track: Track | null | undefined,
+  targetLUFS: number,
+  baseVolume: number,
+  enabled: boolean,
+): number {
+  if (!enabled || !track) return Math.max(0, Math.min(1, baseVolume));
+  return Math.max(
+    0,
+    Math.min(
+      1,
+      baseVolume * dbToLinear(calculateNormalizationGain(track, targetLUFS)),
+    ),
+  );
+}
+
 /**
  * Analyze audio buffer and calculate actual LUFS
  * This is a placeholder for real audio analysis
  */
 export async function analyzeTrackLoudness(
-  _audioBuffer: AudioBuffer,
+  audioBuffer: AudioBuffer,
 ): Promise<number> {
-  // In a real implementation, this would:
-  // 1. Apply K-weighting filter
-  // 2. Calculate mean square over 400ms windows
-  // 3. Compute integrated loudness
-  //
-  // For now, return a placeholder value
-  return -10;
+  const channels = Math.max(1, audioBuffer.numberOfChannels);
+  const frames = audioBuffer.length;
+  if (!frames) return -70;
+  let sumSquares = 0;
+  for (let channel = 0; channel < channels; channel += 1) {
+    const data = audioBuffer.getChannelData(channel);
+    for (let index = 0; index < data.length; index += 1) {
+      sumSquares += data[index] * data[index];
+    }
+  }
+  const rms = Math.sqrt(sumSquares / (frames * channels));
+  return rms > 0 ? 20 * Math.log10(rms) : -70;
 }
 
 /**

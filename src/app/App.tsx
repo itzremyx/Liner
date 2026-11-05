@@ -22,6 +22,8 @@ import EnvironmentWarning from "./EnvironmentWarning";
 import { ConnectionIssueModal } from "@/features/connectivity";
 import { useThemeCustomizationSync } from "@/features/settings";
 import { useModdedThemeSync } from "@/features/modded/hooks/useModdedThemeSync";
+import { useModdedAnalyticsSync } from "@/features/modded/hooks/useModdedAnalyticsSync";
+import { ModdedMetronomeSync } from "@/features/modded/ui/ModdedMetronomeSync";
 import "./globals.css";
 
 function AppIconSync() {
@@ -37,6 +39,11 @@ function PresenceSync() {
 function ThemeSync() {
   useThemeCustomizationSync();
   useModdedThemeSync();
+  return null;
+}
+
+function ModdedAnalyticsSync() {
+  useModdedAnalyticsSync();
   return null;
 }
 
@@ -69,6 +76,8 @@ export default function App() {
       >
         <GlobalTooltip />
         <ThemeSync />
+        <ModdedAnalyticsSync />
+        <ModdedMetronomeSync />
         <AppIconSync />
         <PresenceSync />
         <TouchBarSync />

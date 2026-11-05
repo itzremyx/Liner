@@ -13,6 +13,7 @@ import type {
   LibraryViewMode,
 } from "../types";
 import { useTranslation } from "@/languages";
+import { useModdedSettingsStore } from "@/features/modded/store/moddedStore";
 import { useModalStore } from "../store/modalStore";
 import { LuTrash2 } from "react-icons/lu";
 import { More2Fill, PlaylistFill, AddLine, Search3Fill } from "@mingcute/react";
@@ -143,6 +144,9 @@ function useItemMenuItems(item: LibraryItemViewModel): DropdownMenuItem[] {
 function LibraryItemCard({ item }: { item: LibraryItemViewModel }) {
   const menuItems = useItemMenuItems(item);
   const link = collectionLink(item);
+  const customCoverUrl = useModdedSettingsStore(
+    (state) => state.playlistCovers[item.id],
+  );
 
   if (item.kind === "album") {
     return (
@@ -164,6 +168,7 @@ function LibraryItemCard({ item }: { item: LibraryItemViewModel }) {
       author={item.subtitle}
       imageUrl={item.imageUrl}
       coverUrls={item.coverUrls}
+      customCoverUrl={item.kind === "playlist" ? customCoverUrl : undefined}
       variant={item.kind === "artist" ? "artist" : "playlist"}
       href={item.href}
       linkState={link.state}

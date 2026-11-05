@@ -13,6 +13,9 @@ import {
 import { useLyricsStore } from "../store/lyricsStore";
 import { useTranslation } from "@/languages";
 import { cn } from "@/shared/lib";
+import { usePlayerStore } from "@/features/player";
+import { useModdedSettingsStore } from "@/features/modded/store/moddedStore";
+import { translateLyricLines } from "@/features/modded/lib/lyricsTranslate";
 
 function formatOffsetBadge(ms: number): string {
   if (ms === 0) return "0.0s";
@@ -37,6 +40,11 @@ export function LyricsProviderIsland() {
     adjustOffset,
     resetOffset,
   } = useLyricsStore();
+  const currentTrack = usePlayerStore((state) => state.currentTrack);
+  const translationEnabled = useModdedSettingsStore(
+    (state) => state.lyricsTranslationEnabled,
+  );
+  const [translationState, setTranslationState] = useState<"idle" | "loading" | "done" | "error">("idle");
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [offsetOpen, setOffsetOpen] = useState(false);
@@ -133,6 +141,18 @@ export function LyricsProviderIsland() {
     if (!hasMultiple) return;
     const nextIdx = (currentIndex + 1) % availableProviders.length;
     selectProvider(availableProviders[nextIdx].provider);
+  };
+
+  const translate = async () => {
+    if (!translationEnabled || braccatoLyrics.length === 0) return;
+    setTranslationState("loading");
+    try {
+      const translated = await translateLyricLines(braccatoLyrics, "French");
+      useLyricsStore.getState().setLyricsState({ braccatoLyrics: translated });
+      setTranslationState("done");
+    } catch {
+      setTranslationState("error");
+    }
   };
 
   return (
@@ -247,6 +267,11 @@ export function LyricsProviderIsland() {
               <AddLine size={12} />
             </button>
           </>
+        )}
+        {translationEnabled && currentTrack && (
+          <button type="button" onClick={() => void translate()} disabled={translationState === "loading"} className="ml-[4px] h-[26px] rounded-control border-0 bg-transparent px-[7px] text-caption text-white/75 hover:bg-white/10 hover:text-white disabled:opacity-50 cursor-pointer" title="Traduire les paroles">
+            {translationState === "loading" ? "…" : translationState === "done" ? "FR ✓" : "FR"}
+          </button>
         )}
       </div>
 

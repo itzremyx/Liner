@@ -9,7 +9,17 @@ import ExplicitBadge from "@/shared/ui/ExplicitBadge";
 import CoverImage from "@/features/covers/ui/CoverImage";
 import { isCoverReady } from "@/features/covers/lib/coverArt";
 import { usePlayerStore } from "../store/playerStore";
-import type { TrackArtist } from "@/shared/types";
+import type { Track, TrackArtist } from "@/shared/types";
+import { useModdedSettingsStore } from "@/features/modded/store/moddedStore";
+import {
+  scheduleTrackPreview,
+  stopTrackPreview,
+} from "@/features/modded/lib/hoverPreview";
+
+function formatClock(valueMs: number): string {
+  const totalSeconds = Math.max(0, Math.floor(valueMs / 1000));
+  return `${Math.floor(totalSeconds / 60)}:${String(totalSeconds % 60).padStart(2, "0")}`;
+}
 
 export interface SongCardProps {
   id?: string;
@@ -42,6 +52,7 @@ export interface SongCardProps {
   highlight?: string;
   hideArtists?: boolean;
   trailingAction?: React.ReactNode;
+  previewTrack?: Track;
 }
 
 function SongCard({
@@ -73,6 +84,7 @@ function SongCard({
   highlight,
   hideArtists = false,
   trailingAction,
+  previewTrack,
 }: SongCardProps) {
   const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(() => isCoverReady(coverUrl));
@@ -83,6 +95,11 @@ function SongCard({
   const playerStatus = usePlayerStore((state) => state.status);
   const isCurrentlyPlaying =
     id && currentTrack?.id === id && playerStatus === "playing";
+  const positionMs = usePlayerStore((state) => state.positionMs);
+  const currentDurationMs = usePlayerStore((state) => state.durationMs);
+  const previewEnabled = useModdedSettingsStore(
+    (state) => state.hoverPreviewEnabled,
+  );
 
   useEffect(() => {
     setImageLoaded(isCoverReady(coverUrl));
@@ -156,6 +173,14 @@ function SongCard({
         onGrabStart(e);
       }}
       onContextMenu={onContextMenu}
+      onMouseEnter={() => {
+        if (previewEnabled && previewTrack && !isCurrentlyPlaying) {
+          scheduleTrackPreview(previewTrack);
+        }
+      }}
+      onMouseLeave={() => {
+        if (previewEnabled) stopTrackPreview();
+      }}
       onKeyDown={(event) => {
         if (!onPlay) return;
         if (event.key === "Enter" || event.key === " ") {
@@ -269,6 +294,11 @@ function SongCard({
               ) : (
                 <span className="truncate select-none">{artists}</span>
               )}
+              {isCurrentlyPlaying ? (
+                <span className="ml-[7px] shrink-0 text-caption text-text-tertiary">
+                  {formatClock(positionMs)} / {formatClock(currentDurationMs || previewTrack?.durationMs || 0)}
+                </span>
+              ) : null}
             </p>
           )}
         </div>

@@ -19,8 +19,18 @@ export {
   applyNormalizationGain,
   calculateNormalizationGain,
   clearNormalizationCache,
+  getNormalizedVolume,
 } from "./lib/volumeNormalization";
 export { useModdedThemeSync } from "./hooks/useModdedThemeSync";
+export { useModdedAnalyticsSync } from "./hooks/useModdedAnalyticsSync";
+export {
+  useModdedAnalyticsStore,
+  getWrappedStats,
+  type ListeningEvent,
+} from "./store/moddedAnalyticsStore";
 export { ModdedPlaybackSettings } from "./ui/ModdedPlaybackSettings";
 export { ModdedAppearanceSettings } from "./ui/ModdedAppearanceSettings";
 export { ModdedLogo } from "./ui/ModdedLogo";
+export { ModdedMetronomeSync } from "./ui/ModdedMetronomeSync";
+export { scheduleTrackPreview, stopTrackPreview } from "./lib/hoverPreview";
+export { translateLyricLines } from "./lib/lyricsTranslate";

@@ -68,6 +68,7 @@ import {
   TrackSearchEmpty,
 } from "./TrackSearch";
 import { useTrackSort, TrackSortMenu } from "./TrackSort";
+import { useModdedSettingsStore } from "@/features/modded/store/moddedStore";
 
 interface TrackItemProps {
   track: Track;
@@ -225,6 +226,9 @@ function LibraryPlaylistContent() {
       statusOf(playlistError) !== 404;
 
   const isLoading = isLikesMode ? likesLoading : playlistLoading;
+  const customCoverUrl = useModdedSettingsStore(
+    (state) => (decodedId ? state.playlistCovers[decodedId] : undefined),
+  );
 
   const viewData = (() => {
     if (isLikesMode) {
@@ -249,10 +253,12 @@ function LibraryPlaylistContent() {
       title: playlistDetail.title || t("playlist.untitled_playlist"),
       bio,
       countLabel: t("common.tracks", { count: playlistDetail.trackCount }),
-      coverUrl: playlistDetail.coverUrl || "",
+      coverUrl: customCoverUrl || playlistDetail.coverUrl || "",
       coverUrls:
-        playlistDetail.coverUrls ??
-        (playlistDetail.coverUrl ? [playlistDetail.coverUrl] : []),
+        customCoverUrl
+          ? [customCoverUrl]
+          : playlistDetail.coverUrls ??
+            (playlistDetail.coverUrl ? [playlistDetail.coverUrl] : []),
       tracks: playlistDetail.tracks,
       durationMs: playlistDetail.durationMs,
       revision: playlistDetail.revision,

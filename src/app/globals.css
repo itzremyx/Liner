@@ -626,3 +626,14 @@ html[data-hover-reset] [data-window-controls] button:hover {
 :root[data-performance-mode="on"] body {
   backdrop-filter: none !important;
 }
+
+:root[data-modded-animations="off"] *,
+:root[data-modded-animations="off"] *::before,
+:root[data-modded-animations="off"] *::after {
+  transition-duration: 0.001ms !important;
+  animation-duration: 0.001ms !important;
+}
+
+:root[data-christmas-theme="on"] body {
+  background-image: linear-gradient(135deg, rgba(148, 20, 35, 0.16), rgba(18, 92, 55, 0.12)), var(--modded-background-image, none);
+}

@@ -29,6 +29,7 @@ interface LocalLibraryState {
   pickFiles: () => Promise<LocalImportResult | null>;
   remove: (fileIds: string[]) => Promise<void>;
   removeAll: () => Promise<number>;
+  removeDuplicates: () => Promise<number>;
 }
 
 const newestFirst = (records: LocalTrackRecord[]) =>
@@ -106,6 +107,20 @@ export const useLocalLibraryStore = create<LocalLibraryState>((set, get) => {
       set(withTracks([]));
       await releasePlayingTrack("all");
       return bridge.localTracksRemoveAll();
+    },
+
+    removeDuplicates: async () => {
+      const bridge = window.linerElectron;
+      if (!bridge) return 0;
+      const seen = new Set<string>();
+      const duplicateIds: string[] = [];
+      for (const record of newestFirst(get().records)) {
+        const key = `${record.title.trim().toLocaleLowerCase()}\u0000${record.artist.trim().toLocaleLowerCase()}`;
+        if (seen.has(key)) duplicateIds.push(record.id);
+        else seen.add(key);
+      }
+      if (duplicateIds.length > 0) await get().remove(duplicateIds);
+      return duplicateIds.length;
     },
   };
 });

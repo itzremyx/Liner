@@ -192,6 +192,20 @@ function SongCardWithMenu({
       showReorderHandle={showReorderHandle}
       onGrabStart={onGrabStart}
       trailingAction={trailingAction}
+      previewTrack={
+        id
+          ? {
+              id,
+              title,
+              artists,
+              artistId,
+              artistList,
+              coverUrl,
+              durationMs: resolvedDurationMs,
+              playCount: 0,
+            }
+          : undefined
+      }
     />
   );
 }

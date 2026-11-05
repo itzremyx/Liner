@@ -15,6 +15,7 @@ import PlayerPage from "@/features/player/ui/FullscreenPlayer";
 import { FullscreenRouteContext } from "@/features/navigation/fullscreenRouteContext";
 import KeepAlivePage from "./KeepAlivePage";
 import { useOfflineModeStore } from "@/features/connectivity";
+import ModdedDashboardPage from "@/features/modded/ui/ModdedDashboardPage";
 
 const KEPT_PAGES: ReadonlyArray<{ path: string; element: ReactElement }> = [
   {
@@ -41,6 +42,7 @@ const OFFLINE_PATHS = new Set([
   "/library/local",
   "/library/cached",
   "/library/saved",
+  "/modded",
   PLAYER_PATH,
 ]);
 
@@ -77,6 +79,7 @@ export function AppRoutes() {
             <Route path="/library/local" element={<LocalTracksPage />} />
             <Route path="/library/cached" element={<CachedTracksPage />} />
             <Route path="/library/saved" element={<SavedLikesPage />} />
+            <Route path="/modded" element={<ModdedDashboardPage />} />
             <Route path="/artist" element={<ArtistPage />} />
             <Route path="/collection" element={<CollectionPage />} />
             <Route path="/settings" element={<Navigate to="/" replace />} />

@@ -19,6 +19,8 @@ import {
   TrophyFill,
   TimeFill,
 } from "@mingcute/react";
+import { useModdedSettingsStore } from "@/features/modded/store/moddedStore";
+import { useModdedAnalyticsStore } from "@/features/modded/store/moddedAnalyticsStore";
 
 export default function HomePage() {
   const [attempt, setAttempt] = useState(0);
@@ -36,6 +38,20 @@ function HomeFeed({ onRetry }: { onRetry: () => void }) {
   const { items: popularAlbums, isLoading: albumsLoading } = usePopularAlbums();
   const { items: mostSaved, isLoading: savedLoading } = useMostSaved();
   const { data: dailyMixes, isLoading: mixesLoading } = useDailyMixes();
+  const personalizedHome = useModdedSettingsStore((state) => state.personalizedHome);
+  const analyticsEvents = useModdedAnalyticsStore((state) => state.events);
+  const forYou = analyticsEvents.slice(0, 12).map((event) => ({
+    type: "track" as const,
+    item: {
+      id: event.trackId,
+      title: event.title,
+      artists: event.artists,
+      coverUrl: event.coverUrl,
+      durationMs: event.durationMs,
+      playCount: 0,
+    },
+    playCount: 1,
+  }));
   const hasMixes = dailyMixes.length > 0;
   const firstAlbum = popularAlbums[0];
   const firstAlbumCover =
@@ -65,7 +81,8 @@ function HomeFeed({ onRetry }: { onRetry: () => void }) {
     listeningNow.length === 0 &&
     !recentlyPlayed?.length &&
     !popularTracksAllTime?.length &&
-    mostSaved.length === 0;
+    mostSaved.length === 0 &&
+    (!personalizedHome || forYou.length === 0);
   const [skeletonExited, setSkeletonExited] = useState(() => !isDataLoading);
 
   useEffect(() => {
@@ -119,6 +136,16 @@ function HomeFeed({ onRetry }: { onRetry: () => void }) {
                 title={t("home.popularAlbums")}
                 icon={<AlbumFill />}
                 items={popularAlbums}
+                headingMarginTop={hasMixesSlot ? "mt-[22px]" : "mt-0"}
+              />
+            )}
+
+            {personalizedHome && forYou.length > 0 && (
+              <PopularTracksSection
+                title="Pour toi"
+                subtitle="Basé sur ton écoute récente sur cet appareil"
+                icon={<TimeFill />}
+                items={forYou}
                 headingMarginTop={hasMixesSlot ? "mt-[22px]" : "mt-0"}
               />
             )}

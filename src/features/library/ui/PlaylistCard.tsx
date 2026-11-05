@@ -11,6 +11,7 @@ export interface PlaylistCardProps {
   author: string;
   imageUrl: string;
   coverUrls?: string[];
+  customCoverUrl?: string;
   variant?: PlaylistVariant;
   href?: string;
   linkState?: unknown;
@@ -70,6 +71,7 @@ function PlaylistCard({
   author,
   imageUrl,
   coverUrls,
+  customCoverUrl,
   variant = "playlist",
   href,
   linkState,
@@ -85,8 +87,13 @@ function PlaylistCard({
     y: number;
   } | null>(null);
 
-  const effectiveUrls =
-    coverUrls && coverUrls.length > 0 ? coverUrls : imageUrl ? [imageUrl] : [];
+  const effectiveUrls = customCoverUrl
+    ? [customCoverUrl]
+    : coverUrls && coverUrls.length > 0
+      ? coverUrls
+      : imageUrl
+        ? [imageUrl]
+        : [];
   const hasCollage = effectiveUrls.length >= 2;
 
   const handleContextMenu = useCallback(

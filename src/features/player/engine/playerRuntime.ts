@@ -9,7 +9,11 @@ import { markLinerStreamFailed } from "@/shared/media/liner/linerPlayback";
 import { isLocalTrackId } from "@/shared/media/local";
 import { isSavedTrack } from "@/shared/media/saved";
 import { pitchShifter } from "./pitchShifter";
-import { getCrossfadeDurationMs } from "@/features/modded/store/moddedStore";
+import {
+  getCrossfadeDurationMs,
+  useModdedSettingsStore,
+} from "@/features/modded/store/moddedStore";
+import { getNormalizedVolume } from "@/features/modded/lib/volumeNormalization";
 import { FLAT_EQ, isEqActive } from "./equalizer";
 import { resolvePlaybackStream, type PlaybackStream } from "./streamResolver";
 import { logNowPlaying } from "./nowPlayingLog";
@@ -62,6 +66,16 @@ export class PlayerRuntime {
   public onEnded?: () => void;
   public onError?: (info: { trackId: string; message: string }) => void;
 
+  private getTargetVolume(baseVolume: number): number {
+    const settings = useModdedSettingsStore.getState();
+    return getNormalizedVolume(
+      usePlayerStore.getState().currentTrack,
+      settings.targetLoudnessLUFS,
+      baseVolume,
+      settings.volumeNormalization,
+    );
+  }
+
   constructor() {
     const win = typeof window !== "undefined" ? (window as any) : null;
     let audio = (win?.__liner_audio ||
@@ -94,7 +108,7 @@ export class PlayerRuntime {
       if (state.volume !== prevState.volume) {
         this.cancelFade();
         if (!this.audio.paused) {
-          this.audio.volume = state.volume;
+          this.audio.volume = this.getTargetVolume(state.volume);
         }
       }
       if (
@@ -109,6 +123,19 @@ export class PlayerRuntime {
         const rate = state.playbackRate ?? 1;
         const preservesPitch = !state.isPitchLinked;
         this.applyPlaybackRateAndPitch(rate, preservesPitch);
+      }
+    });
+
+    useModdedSettingsStore.subscribe((state, previous) => {
+      if (
+        state.vocalMode !== previous.vocalMode ||
+        state.volumeNormalization !== previous.volumeNormalization ||
+        state.targetLoudnessLUFS !== previous.targetLoudnessLUFS
+      ) {
+        this.applyPlaybackRateAndPitch();
+        if (!this.audio.paused) {
+          this.audio.volume = this.getTargetVolume(usePlayerStore.getState().volume);
+        }
       }
     });
 
@@ -504,10 +531,20 @@ export class PlayerRuntime {
       const isReverbEnabled = store.isReverbEnabled ?? false;
       const reverbLevel = store.reverbLevel ?? 0.35;
       const isEqEnabled = store.isEqEnabled ?? false;
-      const eqGains = store.eqGains ?? FLAT_EQ;
+      const vocalMode = useModdedSettingsStore.getState().vocalMode;
+      const vocalShape =
+        vocalMode === "instrumental"
+          ? [-1, -1, -2, -3, -4, -4, -3, -2, -1, 0]
+          : vocalMode === "vocals"
+            ? [-1, -1, 0, 2, 4, 5, 4, 2, 0, -1]
+            : FLAT_EQ;
+      const eqGains = (store.eqGains ?? FLAT_EQ).map((gain, index) =>
+        Math.max(-12, Math.min(12, gain + (vocalShape[index] ?? 0))),
+      );
       const needsEffects =
         isReverbEnabled ||
         isEqActive(isEqEnabled, eqGains) ||
+        vocalMode !== "off" ||
         (!isPitchLinked && Math.abs(pitchSemitones) >= 0.05);
       if (!needsEffects && !pitchShifter.isAttached()) return;
       pitchShifter.attach(this.audio);
@@ -865,7 +902,7 @@ export class PlayerRuntime {
         if (epoch === this.loadEpoch) {
           usePlayerStore.getState().setStatus("playing");
           this.fadeVolume(
-            usePlayerStore.getState().volume,
+            this.getTargetVolume(usePlayerStore.getState().volume),
             getCrossfadeDurationMs(),
           );
         }
@@ -940,7 +977,7 @@ export class PlayerRuntime {
       if (epoch === this.loadEpoch) {
         usePlayerStore.getState().setStatus("playing");
         this.fadeVolume(
-          usePlayerStore.getState().volume,
+          this.getTargetVolume(usePlayerStore.getState().volume),
           getCrossfadeDurationMs(),
         );
         this.cacheAudioInBackground(track, stream, bgCacheController.signal);
@@ -1046,7 +1083,7 @@ export class PlayerRuntime {
     this.loadAbortController?.abort();
     this.loadAbortController = null;
 
-    const targetVolume = usePlayerStore.getState().volume;
+    const targetVolume = this.getTargetVolume(usePlayerStore.getState().volume);
     usePlayerStore.getState().setStatus("playing");
     pitchShifter.resumeContext();
     this.applyPlaybackRateAndPitch();

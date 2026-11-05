@@ -4,6 +4,7 @@ import {
   Search3Fill,
   BookmarksFill,
   Settings4Fill,
+  SparklesFill,
 } from "@mingcute/react";
 
 export interface NavItem {
@@ -17,5 +18,6 @@ export const sidebarNavItems: NavItem[] = [
   { id: "home", label: "Home", href: "/", Icon: Home7Fill },
   { id: "search", label: "Search", Icon: Search3Fill },
   { id: "library", label: "Library", href: "/library", Icon: BookmarksFill },
+  { id: "modded", label: "Modded", href: "/modded", Icon: SparklesFill },
   { id: "settings", label: "Settings", Icon: Settings4Fill },
 ];
