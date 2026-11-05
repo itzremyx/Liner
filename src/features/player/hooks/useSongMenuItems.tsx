@@ -7,6 +7,7 @@ import {
   LuPlus,
   LuTrash2,
   LuFolderPlus,
+  LuPin,
 } from "react-icons/lu";
 import { ShareForwardLine } from "@mingcute/react";
 import type { DropdownMenuItem } from "@/shared/ui/DropdownMenu";
@@ -22,6 +23,7 @@ import { useTranslation } from "@/languages";
 import { showToast } from "@/shared/ui";
 import { buildShareUrl } from "@/shared/utils/share";
 import { isLocalTrackId } from "@/shared/media/local";
+import { useModdedSettingsStore } from "@/features/modded/store/moddedStore";
 
 const CLOUD_ONLY_ITEMS = new Set([
   "start-radio",
@@ -293,7 +295,27 @@ export function useSongMenuItems(ctx: SongMenuContext): DropdownMenuItem[] {
       ];
     }
 
+    const itemType = searchType === "artist" ? "artist" : "playlist";
+    const itemHref =
+      itemType === "artist"
+        ? `/artist?id=${encodeURIComponent(id ?? "")}`
+        : `/collection?type=playlist&id=${encodeURIComponent(id ?? "")}`;
     return [
+      {
+        id: "pin-modded",
+        label: "Épingler dans la sidebar",
+        icon: <LuPin size={15} />,
+        onClick: () => {
+          if (!id) return;
+          useModdedSettingsStore.getState().pinItem({
+            id,
+            type: itemType,
+            title,
+            imageUrl: coverUrl,
+            href: itemHref,
+          });
+        },
+      },
       {
         id: "add-to-library",
         label: t("common.add_to_library"),

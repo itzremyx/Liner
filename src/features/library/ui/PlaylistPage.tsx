@@ -69,6 +69,7 @@ import {
 } from "./TrackSearch";
 import { useTrackSort, TrackSortMenu } from "./TrackSort";
 import { useModdedSettingsStore } from "@/features/modded/store/moddedStore";
+import { smartShuffle } from "@/features/modded/lib/smartShuffle";
 
 interface TrackItemProps {
   track: Track;
@@ -381,6 +382,14 @@ function LibraryPlaylistContent() {
 
   const { toast } = useToast();
   const [addedToQueue, setAddedToQueue] = useState(false);
+
+  const handleMixPlay = useCallback(async () => {
+    if (!sortedTracks.length || !viewData) return;
+    const context = decodedId ? `playlist:${decodedId}` : viewData.title;
+    const ordered = await smartShuffle(sortedTracks, true);
+    await playerEngine.playShuffled(ordered, context, viewData.coverUrl);
+    toast("Mix IA préparé", "checkmark");
+  }, [decodedId, sortedTracks, toast, viewData]);
 
   const handleAddToQueue = useCallback(() => {
     if (!sortedTracks.length || !viewData) return;
@@ -792,6 +801,15 @@ function LibraryPlaylistContent() {
                         title={t("common.shuffle")}
                       >
                         <LuShuffle size={18} />
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => void handleMixPlay()}
+                        disabled={currentTracks.length === 0}
+                        className={`${HERO_BUTTON_CLASS} ${HERO_GLASS_BUTTON_CLASS} px-[14px] text-text-primary`}
+                        title="Créer un mix IA"
+                      >
+                        Mix IA
                       </Button>
                     </>
                   }

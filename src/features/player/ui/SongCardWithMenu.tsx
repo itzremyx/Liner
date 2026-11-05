@@ -206,6 +206,7 @@ function SongCardWithMenu({
             }
           : undefined
       }
+      inPlaylist={Boolean(playlistId)}
     />
   );
 }

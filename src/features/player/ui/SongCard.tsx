@@ -53,6 +53,7 @@ export interface SongCardProps {
   hideArtists?: boolean;
   trailingAction?: React.ReactNode;
   previewTrack?: Track;
+  inPlaylist?: boolean;
 }
 
 function SongCard({
@@ -85,6 +86,7 @@ function SongCard({
   hideArtists = false,
   trailingAction,
   previewTrack,
+  inPlaylist = false,
 }: SongCardProps) {
   const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(() => isCoverReady(coverUrl));
@@ -263,6 +265,7 @@ function SongCard({
                 title
               )}
             </h3>
+            {inPlaylist ? <span className="shrink-0 rounded-full bg-border-alpha-14 px-[5px] py-[1px] text-[10px] text-text-tertiary" title="Déjà dans cette playlist">✓ playlist</span> : null}
             {repostedBy && (
               <div
                 className="flex items-center gap-[4px] text-text-tertiary text-body"

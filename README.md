@@ -5,8 +5,11 @@
 **Modern desktop music streaming player with syllable-synced lyrics and reactive dynamic visuals.**
 
 This personal Modded Liner edition adds configurable audio presets, transition
-fades, performance mode, custom visual surfaces, custom branding and optional
-Scoutcode AI recommendations powered by MiniMax M3.1 Flash. API keys are kept
+fades, performance mode, custom visual surfaces, custom branding, local
+analytics/Wrapped, local imports, Smart Shuffle, metronome, lyric translation,
+playlist pinning and optional Scoutcode AI recommendations powered by MiniMax
+M3.1 Flash. Open the **Modded** sparkle page in the sidebar to configure these
+features. API keys are kept
 in local application storage or supplied through `VITE_SCOUTCODE_API_KEY`; no
 credentials belong in this repository.
 
@@ -45,6 +48,12 @@ credentials belong in this repository.
 
 > [!NOTE]
 > Liner client connects to the official Liner API backend for music catalog, streaming playback, and synchronized lyrics.
+
+> [!IMPORTANT]
+> This is a personal modded fork of [tryliner/desktop](https://github.com/tryliner/desktop).
+> Local Wrapped history, Scoutcode keys and custom visual settings stay on the
+> device. Vocal isolation is an experimental EQ-based approximation; a true
+> stem separator would require a separate model/runtime.
 
 ---
 

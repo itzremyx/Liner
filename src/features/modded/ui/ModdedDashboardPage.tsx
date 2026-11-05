@@ -207,6 +207,7 @@ export default function ModdedDashboardPage() {
             <ToggleRow label="Accueil personnalisé" checked={settings.personalizedHome} onChange={settings.setPersonalizedHome} />
             <ToggleRow label="Daily Mixes longs" checked={settings.longerDailyMixes} onChange={settings.setLongerDailyMixes} />
             <ToggleRow label="Animations" checked={settings.animationsEnabled} onChange={settings.setAnimationsEnabled} />
+            <ToggleRow label="Performance mode" hint="Désactive les effets coûteux pour réduire RAM/CPU." checked={settings.performanceMode} onChange={settings.setPerformanceMode} />
             <ToggleRow label="Accélération GPU" hint="Nécessite un redémarrage d’Electron." checked={settings.hardwareAcceleration} onChange={settings.setHardwareAcceleration} />
             <ToggleRow label="Thème Noël automatique" checked={settings.christmasTheme} onChange={settings.setChristmasTheme} />
           </div>
