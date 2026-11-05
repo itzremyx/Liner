@@ -79,5 +79,14 @@ cd android
 
 ---
 
-**Dernière mise à jour** : 5 novembre 2026, 06:36 UTC  
-**Status** : ✅ Build en cours avec fix SDK
+**Dernière mise à jour** : 5 novembre 2026, 06:50 UTC  
+**Status** : ✅ Build en cours - Run #41981206279  
+**URL** : https://github.com/itzremyx/Liner/actions/runs/41981206279  
+
+---
+
+## 📝 Mise à jour récente
+
+✅ **PR #8 mergée** : Dependabot minor/patch (8 packages mis à jour)  
+✅ **Fix pnpm install** : Removed frozen-lockfile flag  
+✅ **Workflow relancé** : Tentative #4 en cours (~10 min)
