@@ -17,10 +17,10 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v7
         with:
           node-version: '22'  # Updated to Node.js 22 (latest LTS)
       
@@ -30,13 +30,13 @@ jobs:
           version: 9
       
       - name: Setup Java JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '17'
       
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
       
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -61,7 +61,7 @@ jobs:
           ls -lh android/app/build/outputs/apk/debug/
       
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: modded-liner-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
@@ -69,7 +69,7 @@ jobs:
       
       - name: Create Release (if tag)
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           files: android/app/build/outputs/apk/debug/app-debug.apk
           token: ${{ secrets.GITHUB_TOKEN }}
