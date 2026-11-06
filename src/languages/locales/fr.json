@@ -70,6 +70,8 @@
     "removed_from_queue": "Retiré de la file d'attente",
     "undo": "Annuler",
     "shuffle": "Lecture aléatoire",
+    "pin_sidebar": "Épingler dans la barre latérale",
+    "unpin_sidebar": "Retirer de la barre latérale",
     "remove_from_library": "Retirer de la bibliothèque",
     "save_to_library": "Enregistrer dans la bibliothèque",
     "share": "Partager",

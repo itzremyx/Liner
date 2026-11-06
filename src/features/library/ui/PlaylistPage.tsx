@@ -787,6 +787,42 @@ function LibraryPlaylistContent() {
                           })()}
                         </span>
                       </div>
+                      {!isLikesMode && decodedId ? (
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          aria-pressed={isPinned}
+                          title={
+                            isPinned
+                              ? t("common.unpin_sidebar")
+                              : t("common.pin_sidebar")
+                          }
+                          onClick={() => {
+                            if (isPinned) {
+                              unpinItem(decodedId);
+                              return;
+                            }
+                            pinItem({
+                              id: decodedId,
+                              type: "playlist",
+                              title: viewData.title,
+                              imageUrl: viewData.coverUrl || undefined,
+                              href: `/library/playlist?id=${encodeURIComponent(decodedId)}`,
+                            });
+                          }}
+                          className={`${HERO_GLASS_BUTTON_CLASS} !h-[28px] !w-[28px] !p-0 ${
+                            isPinned
+                              ? "text-accent-primary"
+                              : "text-text-secondary"
+                          }`}
+                        >
+                          {isPinned ? (
+                            <LuPinOff size={14} />
+                          ) : (
+                            <LuPin size={14} />
+                          )}
+                        </Button>
+                      ) : null}
                       {isLikesMode &&
                       saveLikedEnabled &&
                       viewData.tracks.length > 0 ? (
@@ -912,8 +948,8 @@ function LibraryPlaylistContent() {
                                       <LuPin size={15} />
                                     ),
                                     label: isPinned
-                                      ? "Unpin from sidebar"
-                                      : "Pin to sidebar",
+                                      ? t("common.unpin_sidebar")
+                                      : t("common.pin_sidebar"),
                                     onClick: () => {
                                       if (!decodedId) return;
                                       if (isPinned) {

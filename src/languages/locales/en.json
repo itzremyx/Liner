@@ -74,6 +74,8 @@
     "removed_from_queue": "Removed from queue",
     "undo": "Undo",
     "shuffle": "Shuffle",
+    "pin_sidebar": "Pin to sidebar",
+    "unpin_sidebar": "Unpin from sidebar",
     "remove_from_library": "Remove from library",
     "save_to_library": "Save to library",
     "share": "Share",
