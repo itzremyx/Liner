@@ -56,3 +56,7 @@ scratch/
 # native add-on build output
 /native/*/build/
 /native-build.log
+
+# tauri
+/src-tauri/target/
+/src-tauri/gen/schemas/

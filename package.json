@@ -27,6 +27,9 @@
     "electron:build:linux": "tsc -b && vite build && electron-builder --linux",
     "electron:build:win": "pnpm native:build && tsc -b && vite build && electron-builder --win",
     "electron:build:mac": "tsc -b && vite build && electron-builder --mac",
+    "tauri:dev": "cargo tauri dev",
+    "tauri:build": "cargo tauri build",
+    "tauri:build:debug": "cargo tauri build --debug",
     "native:build": "node scripts/build-native-addon.cjs"
   },
   "build": {
@@ -37,8 +40,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "tryliner",
-        "repo": "desktop"
+        "owner": "itzremyx",
+        "repo": "Liner"
       }
     ],
     "directories": {

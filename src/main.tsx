@@ -3,8 +3,13 @@ import ReactDOM from "react-dom/client";
 import { initGlobalErrorHandlers } from "@/shared/utils/globalErrorHandlers";
 import { hydrateScreenCache } from "@/shared/cache/screenCache";
 import { applyStoredTheme } from "@/shared/utils/storedTheme";
+import { installTauriShim } from "@/platform/tauriShim";
 
 initGlobalErrorHandlers();
+
+// registers window.linerElectron when running inside the Tauri shell, so the
+// rest of the app keeps using the same bridge as the Electron build.
+installTauriShim();
 
 const isOverlay = window.location.hash.startsWith("#/overlay");
 
